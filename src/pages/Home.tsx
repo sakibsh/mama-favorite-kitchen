@@ -9,7 +9,6 @@ import { useCallback, useEffect, useState } from "react";
 import jerkChicken from "@/assets/gallery/jerk-chicken.jpg";
 import jollofRice from "@/assets/gallery/jollof-rice.jpg";
 import curryGoat from "@/assets/gallery/curry-goat.jpg";
-import doubles from "@/assets/gallery/doubles.jpg";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.jpg";
 
 const Home = () => {
@@ -52,11 +51,6 @@ const Home = () => {
       image: curryGoat,
       name: "Curry Goat",
       description: "Tender goat meat in perfectly balanced curry sauce with rice & peas",
-    },
-    {
-      image: doubles,
-      name: "Doubles",
-      description: "Trinidad street food favorite - curried chickpeas in soft bara flatbread",
     },
     {
       image: fufuEgusi,
