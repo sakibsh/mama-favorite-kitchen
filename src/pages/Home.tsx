@@ -17,7 +17,13 @@ const Home = () => {
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
   );
 
+  const [emblaRefTestimonials, emblaApiTestimonials] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
+
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedTestimonialIndex, setSelectedTestimonialIndex] = useState(0);
 
   const scrollTo = useCallback(
     (index: number) => emblaApi && emblaApi.scrollTo(index),
@@ -29,12 +35,29 @@ const Home = () => {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  const onSelectTestimonial = useCallback(() => {
+    if (!emblaApiTestimonials) return;
+    setSelectedTestimonialIndex(emblaApiTestimonials.selectedScrollSnap());
+  }, [emblaApiTestimonials]);
+
+  const scrollToTestimonial = useCallback(
+    (index: number) => emblaApiTestimonials && emblaApiTestimonials.scrollTo(index),
+    [emblaApiTestimonials]
+  );
+
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
+
+  useEffect(() => {
+    if (!emblaApiTestimonials) return;
+    onSelectTestimonial();
+    emblaApiTestimonials.on("select", onSelectTestimonial);
+    emblaApiTestimonials.on("reInit", onSelectTestimonial);
+  }, [emblaApiTestimonials, onSelectTestimonial]);
 
   const dishes = [
     {
@@ -61,19 +84,34 @@ const Home = () => {
 
   const testimonials = [
     {
-      name: "Sarah M.",
+      name: "Victoria Kwong",
       rating: 5,
-      text: "Absolutely amazing! The jollof rice and jerk chicken are to die for. The portions are generous and the flavors are authentic. Best African & Caribbean food in Guelph!",
+      text: "Wow!! We were so excited to find this new restaurant in Guelph - Incredible, savoury, delicious goat curry and fufu and egusi soup! The fufu soaks up the flavour and melts in your mouth, yummy! Mama and her partner are the jolly chefs of this delicious restaurant, it's like having a warm home cooked meal!",
     },
     {
-      name: "Michael T.",
+      name: "Tiffany Chan",
       rating: 5,
-      text: "Mama Favourite Kitchen has become our go-to spot. The owners are so friendly and welcoming. The curry goat is perfectly balanced and delicious. Highly recommend!",
+      text: "Everything is a great price and the portion sizes are wonderful as well. The jerk chicken is fall off the bone and it is beautifully spiced. I think this lady makes magic or something because I literally can't express how happy I am right now. 10/10 have already recommended to my coworkers.",
     },
     {
-      name: "Jennifer L.",
+      name: "Walid Khalil",
       rating: 5,
-      text: "The food is incredible! Everything is fresh and full of flavor. The dhalpuri and doubles are authentic and remind me of home. Great prices too!",
+      text: "Just had the jerk chicken lunch special at Mama's Favourite Kitchen and wow - absolutely amazing! I've been searching for a good Caribbean spot in Guelph for a long time, and I think I've finally found my new go-to. The food is 100%, full of flavour and cooked perfectly.",
+    },
+    {
+      name: "Elle Lee",
+      rating: 5,
+      text: "This is a must-visit new spot in Guelph, and I have no doubt it's going to become a local favourite. The food is fresh, authentic, and prepared right in front of you. The Jerk Chicken is outstanding. It's a small, family-owned business, and the owner/chef brings genuine warmth and care to every dish she serves.",
+    },
+    {
+      name: "benjamin gyan",
+      rating: 5,
+      text: "Check out my plate - I absolutely loved it! The coleslaw was incredible. The jollof was fantastic. The suya was delicious. The real standout was the plantain; it's fried fresh when you ask for it and tasted sooooo good. All in all, I'd give this plate a solid 9.5 out of 10.",
+    },
+    {
+      name: "Kyle Ragoonath",
+      rating: 5,
+      text: "The food is legit! Tried for the first time today. 1.75 chicken quarters, a lot of chicken and a lot of rice. The jollof is so good and actually - good amount of spice. The service was nice and welcoming. Definitely coming back! Good to know Guelph has a good Jamaican/African food spot.",
     },
   ];
 
@@ -261,20 +299,45 @@ const Home = () => {
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center text-secondary mb-12">
             What Our Customers Say
           </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="shadow-card">
-                <CardContent className="p-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                    ))}
+          <div className="max-w-6xl mx-auto">
+            <div className="overflow-hidden" ref={emblaRefTestimonials}>
+              <div className="flex gap-6">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+                  >
+                    <Card className="h-full shadow-card">
+                      <CardContent className="p-6">
+                        <div className="flex gap-1 mb-4">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="h-5 w-5 fill-accent text-accent" />
+                          ))}
+                        </div>
+                        <p className="text-muted-foreground mb-4 min-h-[120px]">{testimonial.text}</p>
+                        <p className="font-semibold text-secondary">— {testimonial.name}</p>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <p className="text-muted-foreground mb-4">{testimonial.text}</p>
-                  <p className="font-semibold text-secondary">— {testimonial.name}</p>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Dots Navigation */}
+            <div className="flex justify-center gap-2 mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === selectedTestimonialIndex
+                      ? "bg-primary w-8"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  }`}
+                  onClick={() => scrollToTestimonial(index)}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
