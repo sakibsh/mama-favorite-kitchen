@@ -3,8 +3,68 @@ import { Phone, MapPin, Clock, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@/assets/hero-food.jpg";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useCallback, useEffect, useState } from "react";
+import jerkChicken from "@/assets/gallery/jerk-chicken.jpg";
+import jollofRice from "@/assets/gallery/jollof-rice.jpg";
+import curryGoat from "@/assets/gallery/curry-goat.jpg";
+import doubles from "@/assets/gallery/doubles.jpg";
+import fufuEgusi from "@/assets/gallery/fufu-egusi.jpg";
 
 const Home = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ delay: 4000, stopOnInteraction: false })]
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  );
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
+
+  const dishes = [
+    {
+      image: jerkChicken,
+      name: "Jerk Chicken",
+      description: "Authentic Caribbean jerk chicken with rice & peas and fried plantains",
+    },
+    {
+      image: jollofRice,
+      name: "Jollof Rice",
+      description: "Vibrant West African jollof rice with grilled chicken and coleslaw",
+    },
+    {
+      image: curryGoat,
+      name: "Curry Goat",
+      description: "Tender goat meat in perfectly balanced curry sauce with rice & peas",
+    },
+    {
+      image: doubles,
+      name: "Doubles",
+      description: "Trinidad street food favorite - curried chickpeas in soft bara flatbread",
+    },
+    {
+      image: fufuEgusi,
+      name: "Fufu & Egusi Soup",
+      description: "Traditional Nigerian pounded yam with rich egusi soup",
+    },
+  ];
+
   const testimonials = [
     {
       name: "Sarah M.",
@@ -51,6 +111,71 @@ const Home = () => {
                 Call to Order
               </a>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Signature Dishes Gallery */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-secondary mb-4">
+              Our Signature Dishes
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explore our most-loved African & Caribbean specialties
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto">
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex gap-6">
+                {dishes.map((dish, index) => (
+                  <div
+                    key={index}
+                    className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+                  >
+                    <Card className="h-full shadow-card hover:shadow-soft transition-smooth group cursor-pointer">
+                      <div className="overflow-hidden rounded-t-lg">
+                        <img
+                          src={dish.image}
+                          alt={dish.name}
+                          className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </div>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-display font-semibold text-primary mb-2">
+                          {dish.name}
+                        </h3>
+                        <p className="text-muted-foreground">{dish.description}</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dots Navigation */}
+            <div className="flex justify-center gap-2 mt-8">
+              {dishes.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === selectedIndex
+                      ? "bg-primary w-8"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  }`}
+                  onClick={() => scrollTo(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <div className="text-center mt-8">
+              <Button asChild size="lg" variant="default">
+                <Link to="/menu">View Full Menu</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
