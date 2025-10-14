@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Phone, MapPin, Clock, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import heroImage from "@/assets/hero-food.jpg";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback, useEffect, useState } from "react";
@@ -12,6 +11,12 @@ import curryGoat from "@/assets/gallery/curry-goat.jpg";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.jpg";
 
 const Home = () => {
+  // Hero slider
+  const [emblaRefHero] = useEmblaCarousel(
+    { loop: true },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start" },
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
@@ -24,6 +29,13 @@ const Home = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedTestimonialIndex, setSelectedTestimonialIndex] = useState(0);
+
+  // Hero slider images
+  const heroSlides = [
+    "/slider/s1.jpg",
+    "/slider/s2.jpg",
+    "/slider/s3.jpg",
+  ];
 
   const scrollTo = useCallback(
     (index: number) => emblaApi && emblaApi.scrollTo(index),
@@ -117,32 +129,42 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
+      {/* Hero Section with Slider */}
+      <section className="relative h-[600px] overflow-hidden">
+        <div className="overflow-hidden h-full" ref={emblaRefHero}>
+          <div className="flex h-full">
+            {heroSlides.map((slide, index) => (
+              <div key={index} className="flex-[0_0_100%] min-w-0 relative h-full">
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${slide})` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         
-        <div className="relative z-10 container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 animate-fade-in">
-            Food That Nurtures Souls
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-slide-up opacity-0 [animation-delay:200ms]">
-            Authentic African & Caribbean Cuisine in Downtown Guelph Since 2000
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in opacity-0 [animation-delay:400ms]">
-            <Button asChild size="lg" variant="default" className="text-lg">
-              <Link to="/menu">View Our Menu</Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary" className="text-lg">
-              <a href="tel:2263325741">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="container mx-auto px-4 text-center text-white">
+            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 animate-fade-in">
+              Food That Nurtures Souls
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-slide-up opacity-0 [animation-delay:200ms]">
+              Authentic African & Caribbean Cuisine in Downtown Guelph Since 2000
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in opacity-0 [animation-delay:400ms]">
+              <Button asChild size="lg" variant="default" className="text-lg">
+                <Link to="/menu">View Our Menu</Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary" className="text-lg">
+              <a href="tel:5198245741">
                 <Phone className="mr-2 h-5 w-5" />
                 Call to Order
               </a>
-            </Button>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -362,8 +384,8 @@ const Home = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="h-5 w-5 text-primary" />
-                    <a href="tel:2263325741" className="text-primary hover:underline font-medium">
-                      (226) 332-5741
+                    <a href="tel:5198245741" className="text-primary hover:underline font-medium">
+                      (519) 824-5741
                     </a>
                   </div>
                 </CardContent>

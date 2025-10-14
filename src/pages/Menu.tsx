@@ -194,10 +194,10 @@ const Menu = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:2263325741"
+              href="tel:5198245741"
               className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8 font-medium transition-smooth"
             >
-              Call (226) 332-5741
+              Call (519) 824-5741
             </a>
             <a
               href="/contact"

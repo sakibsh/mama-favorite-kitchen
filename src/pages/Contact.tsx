@@ -165,8 +165,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Phone</h3>
-                    <a href="tel:2263325741" className="text-primary hover:underline block">
-                      (226) 332-5741
+                    <a href="tel:5198245741" className="text-primary hover:underline block">
+                      (519) 824-5741
                     </a>
                     <p className="text-sm text-muted-foreground mt-1">
                       Call us for take-out orders or catering inquiries
