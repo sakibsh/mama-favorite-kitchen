@@ -1,5 +1,6 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
@@ -12,6 +13,11 @@ const Footer = () => {
             <img src={logo} alt="Mama Favourite Kitchen" className="h-20 w-20 object-contain" />
             <h3 className="text-xl font-display font-bold">Mama Favourite Kitchen</h3>
             <p className="text-sm opacity-90">Food that nurtures souls</p>
+            <Button asChild size="sm" variant="outline" className="mt-4 bg-white text-secondary hover:bg-white/90">
+              <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
+                Order on Uber Eats
+              </a>
+            </Button>
           </div>
 
           {/* Quick Links */}

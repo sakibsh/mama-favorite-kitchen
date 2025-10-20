@@ -156,12 +156,17 @@ const Home = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in opacity-0 [animation-delay:400ms]">
               <Button asChild size="lg" variant="default" className="text-lg">
-                <Link to="/menu">View Our Menu</Link>
+                <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
+                  Order Now on Uber Eats
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="text-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 border-white/30 text-white">
+                <Link to="/menu">View Menu</Link>
               </Button>
               <Button asChild size="lg" variant="secondary" className="text-lg">
               <a href="tel:5198245741">
                 <Phone className="mr-2 h-5 w-5" />
-                Call to Order
+                Call Us
               </a>
               </Button>
             </div>
@@ -251,16 +256,17 @@ const Home = () => {
                     <p className="text-muted-foreground">
                       Perfectly seasoned and grilled jerk chicken served with traditional rice and peas
                     </p>
-                    <p className="text-3xl font-bold text-secondary">$7.50</p>
+                    <p className="text-3xl font-bold text-secondary">$8.50</p>
+                    <p className="text-sm text-muted-foreground mt-2">Lunch Special - Ends at 2:30PM</p>
                   </div>
                   <div className="text-left space-y-2">
                     <h3 className="text-2xl font-display font-semibold text-primary">
                       Doubles
                     </h3>
                     <p className="text-muted-foreground">
-                      Curried chickpea flatbread, add meat or veggies for $4.50
+                      Curried chickpea flatbread, make it exclusive with any meat for $11.50
                     </p>
-                    <p className="text-3xl font-bold text-secondary">$3.50</p>
+                    <p className="text-3xl font-bold text-secondary">$4.00</p>
                   </div>
                 </div>
               </CardContent>
@@ -360,6 +366,75 @@ const Home = () => {
                 />
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Catering Section */}
+      <section className="py-16 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-secondary mb-4">
+                Catering Services for All Occasions
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Make your next event unforgettable with our authentic African & Caribbean cuisine
+              </p>
+            </div>
+            
+            <Card className="shadow-card border-2 border-primary/20 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="bg-primary/5 p-8">
+                    <h3 className="text-xl font-display font-bold text-primary mb-4">
+                      Perfect For:
+                    </h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary text-2xl">🎉</span>
+                        <span className="text-muted-foreground">Weddings & Celebrations</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary text-2xl">💼</span>
+                        <span className="text-muted-foreground">Corporate Events & Meetings</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary text-2xl">🎂</span>
+                        <span className="text-muted-foreground">Birthday Parties & Anniversaries</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary text-2xl">👥</span>
+                        <span className="text-muted-foreground">Community & Cultural Events</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary text-2xl">🏠</span>
+                        <span className="text-muted-foreground">Private Parties & Gatherings</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="p-8 flex flex-col justify-center">
+                    <h3 className="text-xl font-display font-bold text-secondary mb-4">
+                      Customizable Menus
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      From intimate gatherings to large celebrations, we'll create a custom menu featuring our signature dishes including Jerk Chicken, Curry Goat, Jollof Rice, and more. Every dish is prepared fresh with authentic flavors.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button asChild variant="default" size="lg">
+                        <a href="tel:5198245741">
+                          <Phone className="mr-2 h-4 w-4" />
+                          Call for Quote
+                        </a>
+                      </Button>
+                      <Button asChild variant="outline" size="lg">
+                        <Link to="/contact">Learn More</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

@@ -219,34 +219,48 @@ const Contact = () => {
             </Card>
 
             {/* Catering Info */}
-            <Card className="shadow-card bg-muted/50">
+            <Card className="shadow-card bg-primary/5 border-2 border-primary/20">
               <CardContent className="p-6">
-                <h3 className="text-xl font-display font-semibold text-primary mb-3">
-                  Catering Services
+                <h3 className="text-2xl font-display font-bold text-primary mb-3">
+                  Catering Services for All Occasions
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  We offer custom catering for all types of events including:
+                <p className="text-muted-foreground mb-4 font-medium">
+                  We offer professional catering services with authentic African & Caribbean cuisine for all types of events:
                 </p>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-muted-foreground mb-4">
                   <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Corporate events and meetings</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
+                    <span className="text-primary mt-1 text-lg">•</span>
                     <span>Weddings and celebrations</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Community gatherings</span>
+                    <span className="text-primary mt-1 text-lg">•</span>
+                    <span>Corporate events and meetings</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Private parties</span>
+                    <span className="text-primary mt-1 text-lg">•</span>
+                    <span>Birthday parties and anniversaries</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1 text-lg">•</span>
+                    <span>Community gatherings and fundraisers</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1 text-lg">•</span>
+                    <span>Private parties and social events</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1 text-lg">•</span>
+                    <span>Religious and cultural celebrations</span>
                   </li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-4">
-                  Contact us to discuss your catering needs and menu options!
+                <div className="bg-white rounded-md p-4 mb-4">
+                  <p className="font-semibold text-secondary mb-2">Customizable Menu Options:</p>
+                  <p className="text-sm text-muted-foreground">
+                    From intimate gatherings to large celebrations, we'll work with you to create the perfect menu. Choose from our signature dishes or let us customize a spread for your event.
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-primary">
+                  📞 Call us at (519) 824-5741 to discuss your catering needs and get a custom quote!
                 </p>
               </CardContent>
             </Card>

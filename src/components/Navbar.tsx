@@ -32,7 +32,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -52,9 +52,14 @@ const Navbar = () => {
               </Link>
             ))}
             <Button asChild variant="default" size="default" className="gap-2">
+              <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
+                Order Now
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="default" className="gap-2">
               <a href="tel:5198245741">
                 <Phone className="h-4 w-4" />
-                Call Now
+                Call
               </a>
             </Button>
           </div>
@@ -88,6 +93,11 @@ const Navbar = () => {
                 </Link>
               ))}
               <Button asChild variant="default" size="default" className="gap-2 w-full">
+                <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
+                  Order Now on Uber Eats
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="default" className="gap-2 w-full">
                 <a href="tel:5198245741">
                   <Phone className="h-4 w-4" />
                   Call Now
