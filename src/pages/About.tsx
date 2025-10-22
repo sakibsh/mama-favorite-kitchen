@@ -39,9 +39,10 @@ const About = () => {
                   transports you to the heart of African and Caribbean home cooking.
                 </p>
                 <p>
-                  Under the management of Favour J. Idahosa, we continue to serve generous portions with
-                  excellent service and genuine hospitality. Our customers often say they feel like family
-                  here—and that's exactly how we want you to feel.
+                  Under the management of Favour J. Idahosa and her partner Oliver Williams, who is the brain
+                  behind the kitchen, we continue to serve generous portions with excellent service and genuine
+                  hospitality. Our customers often say they feel like family here—and that's exactly how we want
+                  you to feel.
                 </p>
               </div>
             </CardContent>

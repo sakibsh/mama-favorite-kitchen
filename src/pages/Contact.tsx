@@ -198,19 +198,19 @@ const Contact = () => {
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between gap-4">
                         <span className="font-medium">Monday:</span>
-                        <span className="text-muted-foreground">12 PM - 10 PM</span>
+                        <span className="text-muted-foreground">11 AM - 10 PM</span>
                       </div>
                       <div className="flex justify-between gap-4">
-                        <span className="font-medium">Tue - Wed:</span>
-                        <span className="text-muted-foreground">10 AM - 10 PM</span>
+                        <span className="font-medium">Tue - Thu:</span>
+                        <span className="text-muted-foreground">11 AM - 10 PM</span>
                       </div>
                       <div className="flex justify-between gap-4">
-                        <span className="font-medium">Thu - Sat:</span>
-                        <span className="text-muted-foreground">10 AM - 2 AM</span>
+                        <span className="font-medium">Fri - Sat:</span>
+                        <span className="text-muted-foreground">11 AM - 2 AM</span>
                       </div>
                       <div className="flex justify-between gap-4">
                         <span className="font-medium">Sunday:</span>
-                        <span className="text-muted-foreground">1 PM - 10 PM</span>
+                        <span className="text-muted-foreground">1 PM - 8 PM</span>
                       </div>
                     </div>
                   </div>

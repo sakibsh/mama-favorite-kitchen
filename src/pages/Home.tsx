@@ -256,7 +256,7 @@ const Home = () => {
                     <p className="text-muted-foreground">
                       Perfectly seasoned and grilled jerk chicken served with traditional rice and peas
                     </p>
-                    <p className="text-3xl font-bold text-secondary">$8.50</p>
+                    <p className="text-3xl font-bold text-secondary">$7.50</p>
                     <p className="text-sm text-muted-foreground mt-2">Lunch Special - Ends at 2:30PM</p>
                   </div>
                   <div className="text-left space-y-2">
@@ -264,7 +264,7 @@ const Home = () => {
                       Doubles
                     </h3>
                     <p className="text-muted-foreground">
-                      Curried chickpea flatbread, make it exclusive with any meat for $11.50
+                      Curried chickpea flatbread, make it exclusive with any meat for $7.50
                     </p>
                     <p className="text-3xl font-bold text-secondary">$4.00</p>
                   </div>
@@ -472,19 +472,19 @@ const Home = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="font-medium">Monday</span>
-                      <span className="text-muted-foreground">12 PM - 10 PM</span>
+                      <span className="text-muted-foreground">11 AM - 10 PM</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-medium">Tuesday - Wednesday</span>
-                      <span className="text-muted-foreground">10 AM - 10 PM</span>
+                      <span className="font-medium">Tuesday - Thursday</span>
+                      <span className="text-muted-foreground">11 AM - 10 PM</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-medium">Thursday - Saturday</span>
-                      <span className="text-muted-foreground">10 AM - 2 AM</span>
+                      <span className="font-medium">Friday - Saturday</span>
+                      <span className="text-muted-foreground">11 AM - 2 AM</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Sunday</span>
-                      <span className="text-muted-foreground">1 PM - 10 PM</span>
+                      <span className="text-muted-foreground">1 PM - 8 PM</span>
                     </div>
                   </div>
                 </CardContent>

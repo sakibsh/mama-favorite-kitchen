@@ -7,35 +7,42 @@ const Menu = () => {
     {
       title: "Lunch Special (Ends at 2:30PM)",
       items: [
-        { name: "Jerk Chicken, Rice & Peas", price: "$8.50", description: "Perfectly seasoned grilled chicken", badge: "Popular" },
+        { name: "Jerk Chicken, Rice & Peas", price: "$7.50", description: "Perfectly seasoned grilled chicken", badge: "Popular" },
         { name: "Doubles", price: "$4.00", description: "Curried chickpea flatbread" },
-        { name: "Doubles: Make it Exclusive", price: "$11.50", description: "Add any meat" },
+        { name: "Doubles: Make it Exclusive", price: "$7.50", description: "Add any meat" },
       ],
     },
     {
-      title: "Roti Wraps",
+      title: "Sandwiches & Roti Wraps",
       items: [
+        { name: "Curry Goat", price: "$17.99" },
         { name: "Curry Chicken", price: "$14.99" },
-        { name: "Vegetarian ROTI", price: "$14.99", badge: "Vegetarian" },
+        { name: "Suya Wrap", price: "$14.99" },
+        { name: "Jerk Chicken", price: "$14.99" },
+        { name: "Jerk Chicken with Rice & Peas/Jollof Rice", price: "$14.99" },
+        { name: "Curry Goat with Rice & Peas/Jollof Rice", price: "$14.99" },
+        { name: "Oxtail with Rice & Peas/Jollof Rice", price: "$14.99" },
+        { name: "Fried Chicken with Plantain Fries", price: "$14.99" },
+        { name: "Curry Chicken with Rice & Peas", price: "$14.99" },
+        { name: "Plantain Poutine", price: "$14.99" },
       ],
     },
     {
       title: "Dinner",
       description: "Served with coleslaw/Rice and Peas or Jollof rice",
       items: [
-        { name: "Oxtail Dinner", price: "$22.50", badge: "Chef's Choice" },
-        { name: "Curry Goat Dinner", price: "$22.50" },
-        { name: "Suya Dinner", price: "$22.50", description: "Grilled beef tenderloin" },
+        { name: "Oxtail Dinner", price: "$18.50", badge: "Chef's Choice" },
+        { name: "Curry Goat Dinner", price: "$18.50" },
         { name: "Jerk Chicken Dinner", price: "$18.50", badge: "Popular" },
         { name: "Curry Chicken Dinner", price: "$18.50" },
         { name: "Pounded Yam (Fufu)", price: "$18.50", description: "Served with any soup" },
-        { name: "Fish Dinner", price: "$24.99" },
+        { name: "Fish Dinner", price: "$18.50", description: "Rice & Peas/Jollof Rice" },
         { name: "Pasta Dinner", price: "$18.50", description: "With meat, fish or veggies" },
-        { name: "Shrimp Dinner", price: "$18.50" },
+        { name: "Shrimp Dinner", price: "$18.50", description: "Rice & Peas/Jollof Rice" },
+        { name: "Suya Dinner", price: "$18.50", description: "Grilled beef with Rice & Peas or Jollof Rice" },
         { name: "Yam Porridge Dinner", price: "$18.50" },
-        { name: "ROTI Dinner", price: "$18.50", description: "Curry-Chicken, Jerk Chicken or Vegetable", badge: "Vegetarian Option" },
+        { name: "ROTI Dinner", price: "$18.50", description: "Curry Goat, Curry Chicken, Jerk Chicken or Vegetable", badge: "Vegetarian Option" },
         { name: "Plantain Poutine with Any Meat", price: "$18.50" },
-        { name: "Meat Platter with Mash Potatoes & Vegetables", price: "$22.50", description: "Choice of meat with creamy mashed potatoes and fresh vegetables" },
       ],
     },
     {
@@ -46,13 +53,20 @@ const Menu = () => {
       ],
     },
     {
-      title: "Soups of the Day (No Meat)",
+      title: "Soups of the Day",
       items: [
+        { name: "Chicken Soup", price: "$7.99" },
         { name: "Egusi Soup", price: "$7.99" },
         { name: "Chicken Curry", price: "$7.99" },
         { name: "Okro Soup", price: "$7.99" },
-        { name: "Vegetable Soup (No Meat)", price: "$7.99", badge: "Vegetarian" },
-        { name: "Goat Pepper Soup", price: "$24.99" },
+        { name: "Vegetable Soup", price: "$7.99", badge: "Vegetarian" },
+      ],
+    },
+    {
+      title: "Nigerian Pepper Soup Delight",
+      description: "By order only",
+      items: [
+        { name: "Red Snapper", price: "$25.00" },
       ],
     },
     {
@@ -60,17 +74,13 @@ const Menu = () => {
       items: [
         { name: "Rice", price: "$4.50" },
         { name: "Curry Chicken", price: "$9.99" },
-        { name: "Jerk Chicken", price: "$7.50" },
+        { name: "Chicken", price: "$9.50" },
         { name: "Festival (Fried Dumplings)", price: "$4.50" },
         { name: "Fried Plantain", price: "$4.50", badge: "Popular" },
-        { name: "Plantain Fries", price: "$5.00" },
+        { name: "Plantain Fries", price: "$4.50" },
         { name: "Roti Skins", price: "$6.49" },
-        { name: "Moi-moi", price: "$5.00", description: "Steamed black eye bean pudding" },
-        { name: "Assorted Meat", price: "$24.99" },
-        { name: "Plantain Poutine", price: "$14.99" },
-        { name: "Fufu (1 wrap)", price: "$5.99" },
-        { name: "Mash Potatoes", price: "$4.99" },
-        { name: "Vegetables", price: "$4.99" },
+        { name: "Moi-moi", price: "$4.50", description: "Steamed black eye bean pudding" },
+        { name: "Assorted Meat", price: "$25.00" },
       ],
     },
     {
@@ -86,9 +96,9 @@ const Menu = () => {
     {
       title: "Vegetarian",
       items: [
-        { name: "Peas & Fried Plantain", price: "$14.99", description: "Roti, wrap, or full meal", badge: "Vegetarian" },
-        { name: "Doubles with Rice & Grilled Vegetables", price: "$14.99", badge: "Vegetarian" },
-        { name: "Yam Porridge", price: "$14.99", badge: "Vegetarian" },
+        { name: "Beans & Fried Plantain", price: "$11.99", description: "Roti, wrap, or full meal", badge: "Vegetarian" },
+        { name: "Doubles with Uncle Ben Rice, Steam Spinach, Kale, or String Beans", price: "$11.99", badge: "Vegetarian" },
+        { name: "Yam Porridge", price: "$11.99", badge: "Vegetarian" },
       ],
     },
     {
@@ -100,8 +110,8 @@ const Menu = () => {
     {
       title: "Beverages",
       items: [
-        { name: "Pop", price: "$1.75" },
-        { name: "Bottled Water", price: "$1.50" },
+        { name: "Pop", price: "$1.50" },
+        { name: "Bottled Water", price: "$1.25" },
         { name: "Bottle Soda Drink", price: "$3.00" },
         { name: "Tea", price: "$1.95" },
         { name: "Coffee", price: "$1.95" },
