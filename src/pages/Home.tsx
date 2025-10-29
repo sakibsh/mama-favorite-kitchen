@@ -417,8 +417,11 @@ const Home = () => {
                     <h3 className="text-xl font-display font-bold text-secondary mb-4">
                       Customizable Menus
                     </h3>
-                    <p className="text-muted-foreground mb-6">
+                    <p className="text-muted-foreground mb-4">
                       From intimate gatherings to large celebrations, we'll create a custom menu featuring our signature dishes including Jerk Chicken, Curry Goat, Jollof Rice, and more. Every dish is prepared fresh with authentic flavors.
+                    </p>
+                    <p className="text-muted-foreground mb-6 font-semibold">
+                      View our catering platters & party trays pricing on our menu page, starting from $25!
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button asChild variant="default" size="lg">
@@ -428,7 +431,7 @@ const Home = () => {
                         </a>
                       </Button>
                       <Button asChild variant="outline" size="lg">
-                        <Link to="/contact">Learn More</Link>
+                        <Link to="/menu#catering">View Catering Menu</Link>
                       </Button>
                     </div>
                   </div>

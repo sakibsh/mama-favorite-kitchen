@@ -120,6 +120,18 @@ const Menu = () => {
         { name: "Smoothie (Large)", price: "$9.99" },
       ],
     },
+    {
+      title: "Catering Platters & Party Trays",
+      description: "Perfect for events, parties, and gatherings - Call (519) 824-5741 to order",
+      items: [
+        { name: "Full Tray of Jerk Chicken", price: "$150.00", description: "Serves a crowd", badge: "Popular" },
+        { name: "1 Pan of Jollof Rice", price: "$120.00", description: "Authentic West African rice" },
+        { name: "1 Pan of Rice and Peas", price: "$150.00", description: "Traditional Caribbean side" },
+        { name: "1/2 Pan Assorted Meat", price: "$150.00", description: "Mix of our best meats" },
+        { name: "Stew", price: "$50.00", description: "2 liters" },
+        { name: "Goat Pepper Soup", price: "$25.00", description: "30 Oz", badge: "Chef's Choice" },
+      ],
+    },
   ];
 
   return (
@@ -143,7 +155,11 @@ const Menu = () => {
         {/* Menu Sections */}
         <div className="space-y-12 max-w-5xl mx-auto">
           {menuSections.map((section, index) => (
-            <Card key={index} className="shadow-card">
+            <Card 
+              key={index} 
+              id={section.title === "Catering Platters & Party Trays" ? "catering" : undefined}
+              className="shadow-card"
+            >
               <CardHeader className="bg-muted/50">
                 <CardTitle className="text-2xl font-display text-primary">
                   {section.title}
