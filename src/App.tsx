@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
+import ScrollToTop from "./components/ScrollToTop";
 import { DitherBackground } from "./components/DitherBackground";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <DitherBackground />
         <div className="flex flex-col min-h-screen relative z-10">
           <Navbar />
