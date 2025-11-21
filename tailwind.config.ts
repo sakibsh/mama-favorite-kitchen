@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
+        sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+        display: ['Syne', 'Playfair Display', 'serif'],
       },
       colors: {
         'brand-orange': 'hsl(var(--brand-orange))',

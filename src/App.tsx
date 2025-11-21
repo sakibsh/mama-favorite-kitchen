@@ -11,6 +11,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
+import { DitherBackground } from "./components/DitherBackground";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -19,7 +21,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
+        <DitherBackground />
+        <div className="flex flex-col min-h-screen relative z-10">
           <Navbar />
           <main className="flex-1">
             <Routes>
