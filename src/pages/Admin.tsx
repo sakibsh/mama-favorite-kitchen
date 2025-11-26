@@ -13,6 +13,7 @@ import { ShaderText } from "@/components/ShaderText";
 import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
 
 interface Order {
   id: string;
@@ -100,9 +101,15 @@ export default function Admin() {
 
   const loadOrders = async () => {
     try {
+      // Get today's date range in Toronto timezone
+      const todayStart = getTodayStartInToronto();
+      const todayEnd = getTodayEndInToronto();
+
       const { data, error } = await supabase
         .from("orders")
         .select("*")
+        .gte("created_at", todayStart)
+        .lte("created_at", todayEnd)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -411,11 +418,16 @@ export default function Admin() {
               </Select>
             </div>
 
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>Showing today's orders only (Toronto time) • Resets at midnight</span>
+            </div>
+
             {filteredOrders.length === 0 ? (
               <Card className="text-center py-12">
                 <CardContent>
                   <Package className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
-                  <p className="text-lg font-medium text-muted-foreground">No orders found</p>
+                  <p className="text-lg font-medium text-muted-foreground">No orders today</p>
                   <p className="text-sm text-muted-foreground/70">Orders will appear here when customers place them</p>
                 </CardContent>
               </Card>
@@ -439,7 +451,7 @@ export default function Admin() {
                             </CardTitle>
                             <CardDescription className="flex items-center gap-2 mt-1">
                               <Clock className="h-3 w-3" />
-                              {new Date(order.created_at).toLocaleString()} • Pickup: {order.pickup_time}
+                              {formatTodayTime(order.created_at)} • Pickup: {order.pickup_time}
                             </CardDescription>
                           </div>
                           <Select
