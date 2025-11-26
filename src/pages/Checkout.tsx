@@ -68,20 +68,19 @@ export default function Checkout() {
       const orderNum = generateOrderNumber();
 
       // Create order in database
-      const { error: orderError } = await supabase.from("orders").insert({
+      const { error: orderError } = await supabase.from("orders").insert([{
         order_number: orderNum,
         customer_name: formData.name,
         customer_email: formData.email,
         customer_phone: formData.phone,
-        items: items,
+        items: JSON.parse(JSON.stringify(items)),
         subtotal: subtotal,
         tax: tax,
         total: total,
         pickup_time: formData.pickupTime,
         special_instructions: formData.specialInstructions,
         status: "confirmed",
-        payment_status: "succeeded", // For now, simulating successful payment
-      });
+      }]);
 
       if (orderError) {
         console.error("Order error:", orderError);
