@@ -113,7 +113,13 @@ export default function Admin() {
         }
         throw error;
       }
-      setOrders(data || []);
+      // Map database rows to Order type, casting JSON items
+      const mappedOrders: Order[] = (data || []).map((row) => ({
+        ...row,
+        items: row.items as Array<{ id: string; name: string; price: number; quantity: number }>,
+        special_instructions: row.special_instructions || "",
+      }));
+      setOrders(mappedOrders);
     } catch (error) {
       console.error("Error loading orders:", error);
       // Use demo data if database not set up
