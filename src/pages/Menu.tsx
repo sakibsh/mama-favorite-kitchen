@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
+import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -20,11 +22,27 @@ const parsePrice = (priceStr: string) => {
 
 const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
+  const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
+
+  // Check lunch special availability periodically
+  useEffect(() => {
+    const checkAvailability = () => {
+      setLunchAvailable(isLunchSpecialAvailable());
+    };
+
+    // Check every minute
+    const interval = setInterval(checkAvailability, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const menuSections = [
     {
-      title: "Lunch Special (Ends at 2:30PM Monday to Fridays Only)",
+      title: "Lunch Special",
+      subtitle: lunchAvailable 
+        ? "Available Mon-Fri until 2:30 PM" 
+        : `Currently unavailable • ${getNextLunchSpecialTime()}`,
       orderable: true,
+      isLunchSpecial: true,
       items: [
         { name: "Jerk Chicken, Rice & Peas", price: "$7.50", description: "Perfectly seasoned grilled chicken", badge: "Popular" },
         { name: "Doubles", price: "$4.00", description: "Curried chickpea flatbread" },
@@ -198,6 +216,17 @@ const Menu = () => {
                 description={section.description}
                 className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-xl"
               >
+                {/* Lunch special availability notice */}
+                {section.isLunchSpecial && (
+                  <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
+                    lunchAvailable 
+                      ? "bg-brand-green/10 text-brand-green" 
+                      : "bg-muted text-muted-foreground"
+                  }`}>
+                    <Clock className="h-4 w-4" />
+                    <span className="text-sm font-medium">{section.subtitle}</span>
+                  </div>
+                )}
                 <div className="grid gap-4">
                   {section.items.map((item, itemIndex) => {
                     const itemId = generateId(item.name, section.title);
@@ -241,7 +270,17 @@ const Menu = () => {
                       </span>
                           
                           {section.orderable ? (
-                            quantity > 0 ? (
+                            // Check if it's lunch special and not available
+                            section.isLunchSpecial && !lunchAvailable ? (
+                              <Button
+                                size="sm"
+                                disabled
+                                className="bg-muted text-muted-foreground cursor-not-allowed"
+                              >
+                                <Clock className="h-4 w-4 mr-1" />
+                                Unavailable
+                              </Button>
+                            ) : quantity > 0 ? (
                               <div className="flex items-center gap-2">
                                 <Button
                                   variant="outline"
