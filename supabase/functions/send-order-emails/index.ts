@@ -175,7 +175,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Mama Favourite Kitchen <orders@mamafavourite.com>",
+        from: "Mama Favourite Kitchen <onboarding@resend.dev>",
         to: [order.customerEmail],
         subject: `Order Confirmation #${order.orderNumber} - Mama Favourite Kitchen`,
         html: customerEmailHtml,
@@ -190,7 +190,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Mama Favourite Kitchen Orders <orders@mamafavourite.com>",
+        from: "Mama Favourite Kitchen Orders <onboarding@resend.dev>",
         to: [CHEF_EMAIL],
         subject: `🍽️ NEW ORDER #${order.orderNumber} - ${order.customerName}`,
         html: chefEmailHtml,
