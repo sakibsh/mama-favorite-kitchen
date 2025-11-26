@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CartButton } from "@/components/CartButton";
 import logo from "@/assets/logo.png";
 
 const Navbar = () => {
@@ -51,10 +52,11 @@ const Navbar = () => {
                 />
               </Link>
             ))}
-            <Button asChild variant="default" size="default" className="gap-2">
-              <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
-                Order Now
-              </a>
+            <CartButton />
+            <Button asChild variant="default" size="default" className="gap-2 bg-brand-orange hover:bg-brand-orange/90">
+              <Link to="/menu">
+                Order Pickup
+              </Link>
             </Button>
             <Button asChild variant="outline" size="default" className="gap-2">
               <a href="tel:5198245741">
@@ -65,13 +67,16 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-foreground hover:text-primary transition-smooth"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <CartButton />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-foreground hover:text-primary transition-smooth"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -92,10 +97,10 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              <Button asChild variant="default" size="default" className="gap-2 w-full">
-                <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
-                  Order Now on Uber Eats
-                </a>
+              <Button asChild variant="default" size="default" className="gap-2 w-full bg-brand-orange hover:bg-brand-orange/90">
+                <Link to="/menu" onClick={() => setIsOpen(false)}>
+                  Order Pickup
+                </Link>
               </Button>
               <Button asChild variant="outline" size="default" className="gap-2 w-full">
                 <a href="tel:5198245741">
