@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShaderText } from "@/components/ShaderText";
-import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle } from "lucide-react";
+import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -75,6 +75,7 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -155,23 +156,49 @@ export default function Admin() {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      if (isSignUp) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/admin`,
+          },
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      setIsAuthenticated(true);
-      await loadData();
-      toast.success("Welcome back!");
+        if (data.user) {
+          // Add admin role for this user
+          const { error: roleError } = await supabase
+            .from("user_roles")
+            .insert({ user_id: data.user.id, role: "admin" });
+
+          if (roleError) {
+            console.error("Error assigning admin role:", roleError);
+          }
+
+          toast.success("Account created! You can now sign in.");
+          setIsSignUp(false);
+        }
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        setIsAuthenticated(true);
+        await loadData();
+        toast.success("Welcome back!");
+      }
     } catch (error: any) {
-      toast.error(error.message || "Failed to login");
+      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "login"}`);
     } finally {
       setIsLoading(false);
     }
@@ -269,15 +296,15 @@ export default function Admin() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-              <ChefHat className="h-6 w-6 text-brand-orange" />
-              Admin Login
+              {isSignUp ? <UserPlus className="h-6 w-6 text-brand-orange" /> : <ChefHat className="h-6 w-6 text-brand-orange" />}
+              {isSignUp ? "Create Admin Account" : "Admin Login"}
             </CardTitle>
             <CardDescription>
-              Sign in to manage orders and menu items
+              {isSignUp ? "Create a new admin account" : "Sign in to manage orders and menu items"}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleAuth} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -296,11 +323,21 @@ export default function Admin() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder={isSignUp ? "Create a strong password" : ""}
+                  minLength={6}
                   required
                 />
               </div>
               <Button type="submit" className="w-full bg-brand-orange hover:bg-brand-orange/90">
-                Sign In
+                {isSignUp ? "Create Account" : "Sign In"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
+                onClick={() => setIsSignUp(!isSignUp)}
+              >
+                {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
               </Button>
             </form>
           </CardContent>
