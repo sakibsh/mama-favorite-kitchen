@@ -75,8 +75,10 @@ export default function Checkout() {
       if (fnError) throw fnError;
       
       if (data?.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
+        // Open Stripe Checkout in a new tab
+        window.open(data.url, "_blank");
+        setIsProcessing(false);
+        toast.success("Payment page opened in a new tab");
       } else {
         throw new Error("No checkout URL returned");
       }
