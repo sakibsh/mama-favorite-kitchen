@@ -9,17 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
-import { ArrowLeft, Clock, CreditCard, Loader2, CheckCircle } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, subtotal, tax, total, clearCart } = useCart();
+  const { items, subtotal, tax, total } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [orderNumber, setOrderNumber] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -43,12 +41,6 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const generateOrderNumber = () => {
-    const timestamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `MFK-${timestamp}-${random}`;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -65,123 +57,35 @@ export default function Checkout() {
     setIsProcessing(true);
 
     try {
-      const orderNum = generateOrderNumber();
+      // Create Stripe Checkout session
+      const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
+        body: {
+          items: items,
+          customerName: formData.name,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          pickupTime: formData.pickupTime,
+          specialInstructions: formData.specialInstructions,
+          subtotal: subtotal,
+          tax: tax,
+          total: total,
+        },
+      });
 
-      // Create order in database
-      const { error: orderError } = await supabase.from("orders").insert([{
-        order_number: orderNum,
-        customer_name: formData.name,
-        customer_email: formData.email,
-        customer_phone: formData.phone,
-        items: JSON.parse(JSON.stringify(items)),
-        subtotal: subtotal,
-        tax: tax,
-        total: total,
-        pickup_time: formData.pickupTime,
-        special_instructions: formData.specialInstructions,
-        status: "confirmed",
-      }]);
-
-      if (orderError) {
-        console.error("Order error:", orderError);
-        // If table doesn't exist, show a friendly message but still process order
-        if (orderError.code === "42P01") {
-          console.log("Orders table not created yet - proceeding with demo order");
-        } else {
-          throw orderError;
-        }
+      if (fnError) throw fnError;
+      
+      if (data?.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
       }
-
-      // Send confirmation emails via edge function
-      try {
-        await supabase.functions.invoke("send-order-emails", {
-          body: {
-            orderNumber: orderNum,
-            customerName: formData.name,
-            customerEmail: formData.email,
-            customerPhone: formData.phone,
-            items: items,
-            subtotal: subtotal,
-            tax: tax,
-            total: total,
-            pickupTime: formData.pickupTime,
-            specialInstructions: formData.specialInstructions,
-          },
-        });
-      } catch (emailError) {
-        console.log("Email function not set up yet:", emailError);
-      }
-
-      setOrderNumber(orderNum);
-      setOrderComplete(true);
-      clearCart();
-      toast.success("Order placed successfully!");
-
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error("There was an error placing your order. Please try again.");
-    } finally {
+      toast.error("There was an error starting payment. Please try again.");
       setIsProcessing(false);
     }
   };
-
-  if (orderComplete) {
-    return (
-      <div className="min-h-screen pt-32 pb-16">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
-          >
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-              <CheckCircle className="h-14 w-14 text-green-600" />
-            </div>
-            <h1 className="text-4xl font-display font-bold text-foreground mb-4">
-              Order Confirmed!
-            </h1>
-            <p className="text-xl text-muted-foreground mb-2">
-              Thank you for your order, {formData.name}!
-            </p>
-            <p className="text-lg font-semibold text-brand-orange mb-8">
-              Order #{orderNumber}
-            </p>
-
-            <Card className="text-left mb-8">
-              <CardContent className="p-6 space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Pickup Time</p>
-                  <p className="font-semibold">{formData.pickupTime}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Location</p>
-                  <p className="font-semibold">45 Cork St E, Guelph, ON N1H 2W7</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Paid</p>
-                  <p className="font-semibold text-brand-orange">${total.toFixed(2)}</p>
-                </div>
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    A confirmation email has been sent to <span className="font-medium">{formData.email}</span>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate("/")} variant="outline" size="lg">
-                Back to Home
-              </Button>
-              <Button onClick={() => navigate("/menu")} size="lg" className="bg-brand-orange hover:bg-brand-orange/90">
-                Order More
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -301,7 +205,7 @@ export default function Checkout() {
                   <div className="pt-4 border-t">
                     <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2">
                       <CreditCard className="h-4 w-4" />
-                      Payment will be collected at pickup
+                      Secure payment via Stripe
                     </p>
                     <Button
                       type="submit"
@@ -312,10 +216,10 @@ export default function Checkout() {
                       {isProcessing ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Processing...
+                          Redirecting to Payment...
                         </>
                       ) : (
-                        `Place Order • $${total.toFixed(2)}`
+                        `Pay Now • $${total.toFixed(2)}`
                       )}
                     </Button>
                   </div>
