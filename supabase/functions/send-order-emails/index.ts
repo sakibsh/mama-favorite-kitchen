@@ -3,6 +3,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const CHEF_EMAIL = Deno.env.get("CHEF_EMAIL") || "admin@mamafavourite.com";
 
+// Twilio credentials for SMS
+const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
+const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
+const TWILIO_PHONE_NUMBER = Deno.env.get("TWILIO_PHONE_NUMBER");
+const ADMIN_PHONE_NUMBER = Deno.env.get("ADMIN_PHONE_NUMBER");
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -31,6 +37,46 @@ const formatOrderItems = (items: OrderItem[]) => {
   return items
     .map((item) => `• ${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`)
     .join("\n");
+};
+
+// Send SMS via Twilio
+const sendSMS = async (to: string, body: string) => {
+  if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+    console.log("Twilio credentials not configured. Skipping SMS.");
+    return { success: false, message: "SMS service not configured" };
+  }
+
+  const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
+  
+  const formData = new URLSearchParams();
+  formData.append("To", to);
+  formData.append("From", TWILIO_PHONE_NUMBER);
+  formData.append("Body", body);
+
+  try {
+    const response = await fetch(twilioUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      console.error("Twilio SMS error:", result);
+      return { success: false, error: result };
+    }
+
+    console.log("SMS sent successfully:", result.sid);
+    return { success: true, sid: result.sid };
+  } catch (error) {
+    console.error("Error sending SMS:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return { success: false, error: errorMessage };
+  }
 };
 
 serve(async (req) => {
@@ -157,59 +203,84 @@ serve(async (req) => {
     </html>
     `;
 
-    // If RESEND_API_KEY is not configured, just log and return success
-    if (!RESEND_API_KEY) {
+    // Format SMS message for admin
+    const smsItemsList = order.items
+      .map((item) => `• ${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`)
+      .join("\n");
+    
+    const smsMessage = `🍽️ NEW ORDER #${order.orderNumber}
+
+Customer: ${order.customerName}
+Phone: ${order.customerPhone}
+Pickup: ${order.pickupTime}
+
+Items:
+${smsItemsList}
+
+Total: $${order.total.toFixed(2)}${order.specialInstructions ? `\n\n⚠️ Note: ${order.specialInstructions}` : ""}`;
+
+    let customerResult = null;
+    let chefResult = null;
+    let smsResult = null;
+
+    // Send emails if RESEND_API_KEY is configured
+    if (RESEND_API_KEY) {
+      // Send customer confirmation email
+      const customerEmailRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Mama Favourite Kitchen <onboarding@resend.dev>",
+          to: [order.customerEmail],
+          subject: `Order Confirmation #${order.orderNumber} - Mama Favourite Kitchen`,
+          html: customerEmailHtml,
+        }),
+      });
+
+      // Send chef notification email
+      const chefEmailRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Mama Favourite Kitchen Orders <onboarding@resend.dev>",
+          to: [CHEF_EMAIL],
+          subject: `🍽️ NEW ORDER #${order.orderNumber} - ${order.customerName}`,
+          html: chefEmailHtml,
+        }),
+      });
+
+      customerResult = await customerEmailRes.json();
+      chefResult = await chefEmailRes.json();
+    } else {
       console.log("RESEND_API_KEY not configured. Skipping email send.");
       console.log("Order details:", order);
-      return new Response(
-        JSON.stringify({ success: true, message: "Email service not configured" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
     }
 
-    // Send customer confirmation email
-    const customerEmailRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Mama Favourite Kitchen <onboarding@resend.dev>",
-        to: [order.customerEmail],
-        subject: `Order Confirmation #${order.orderNumber} - Mama Favourite Kitchen`,
-        html: customerEmailHtml,
-      }),
-    });
-
-    // Send chef notification email
-    const chefEmailRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Mama Favourite Kitchen Orders <onboarding@resend.dev>",
-        to: [CHEF_EMAIL],
-        subject: `🍽️ NEW ORDER #${order.orderNumber} - ${order.customerName}`,
-        html: chefEmailHtml,
-      }),
-    });
-
-    const customerResult = await customerEmailRes.json();
-    const chefResult = await chefEmailRes.json();
+    // Send SMS to admin if Twilio is configured
+    if (ADMIN_PHONE_NUMBER) {
+      smsResult = await sendSMS(ADMIN_PHONE_NUMBER, smsMessage);
+      console.log("SMS notification result:", smsResult);
+    } else {
+      console.log("ADMIN_PHONE_NUMBER not configured. Skipping SMS.");
+    }
 
     return new Response(
       JSON.stringify({
         success: true,
         customerEmail: customerResult,
         chefEmail: chefResult,
+        sms: smsResult,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Error sending emails:", error);
+    console.error("Error sending notifications:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
       JSON.stringify({ error: errorMessage }),
@@ -217,4 +288,3 @@ serve(async (req) => {
     );
   }
 });
-
