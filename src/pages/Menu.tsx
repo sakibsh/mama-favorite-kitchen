@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
+import { usePickupSettings } from "@/hooks/usePickupSettings";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -23,6 +24,7 @@ const parsePrice = (priceStr: string) => {
 const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
   const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
+  const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
 
   // Check lunch special availability periodically
   useEffect(() => {
@@ -181,6 +183,25 @@ const Menu = () => {
   return (
     <div className="min-h-screen pt-32 pb-16 overflow-x-hidden">
       <div className="container mx-auto px-4 relative z-10">
+        {/* Pickup Closed Banner */}
+        {!pickupLoading && !pickupEnabled && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 bg-red-500/10 border-2 border-red-500/30 rounded-2xl p-6 text-center"
+          >
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <AlertTriangle className="h-6 w-6 text-red-500" />
+              <h2 className="text-xl font-bold text-red-600 dark:text-red-400">Online Ordering Temporarily Closed</h2>
+            </div>
+            <p className="text-muted-foreground">
+              We're not accepting online pickup orders right now. Please call us at{" "}
+              <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>{" "}
+              to place your order.
+            </p>
+          </motion.div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-16">
           <ShaderText as="h1" text="Our Menu" className="text-5xl md:text-7xl mb-6" />
@@ -191,11 +212,26 @@ const Menu = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-brand-green/10 border-2 border-brand-green/20 rounded-2xl p-6 max-w-2xl mx-auto backdrop-blur-sm"
+            className={`border-2 rounded-2xl p-6 max-w-2xl mx-auto backdrop-blur-sm ${
+              pickupEnabled 
+                ? "bg-brand-green/10 border-brand-green/20" 
+                : "bg-muted border-border"
+            }`}
           >
-            <p className="font-bold text-brand-green text-lg flex items-center justify-center gap-2">
-              <ShoppingCart className="h-5 w-5" />
-              Order online for pickup! Add items to your cart below.
+            <p className={`font-bold text-lg flex items-center justify-center gap-2 ${
+              pickupEnabled ? "text-brand-green" : "text-muted-foreground"
+            }`}>
+              {pickupEnabled ? (
+                <>
+                  <ShoppingCart className="h-5 w-5" />
+                  Order online for pickup! Add items to your cart below.
+                </>
+              ) : (
+                <>
+                  <Phone className="h-5 w-5" />
+                  Call (519) 824-5741 to place your order
+                </>
+              )}
             </p>
           </motion.div>
         </div>
@@ -270,8 +306,19 @@ const Menu = () => {
                       </span>
                           
                           {section.orderable ? (
-                            // Check if it's lunch special and not available
-                            section.isLunchSpecial && !lunchAvailable ? (
+                            // Check if pickup is disabled
+                            !pickupEnabled ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                asChild
+                              >
+                                <a href="tel:5198245741">
+                                  <Phone className="h-4 w-4 mr-1" />
+                                  Call
+                                </a>
+                              </Button>
+                            ) : section.isLunchSpecial && !lunchAvailable ? (
                               <Button
                                 size="sm"
                                 disabled

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,15 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
-import { ArrowLeft, Clock, CreditCard, Loader2 } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, Loader2, AlertTriangle, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { usePickupSettings } from "@/hooks/usePickupSettings";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, subtotal, tax, total } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -88,6 +90,40 @@ export default function Checkout() {
       setIsProcessing(false);
     }
   };
+
+  // Show message if pickup is closed
+  if (!pickupLoading && !pickupEnabled) {
+    return (
+      <div className="min-h-screen pt-32 pb-16">
+        <div className="container mx-auto px-4 max-w-2xl text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-red-500/10 border-2 border-red-500/30 rounded-2xl p-8 mb-8"
+          >
+            <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h1 className="text-3xl font-display font-bold text-foreground mb-4">
+              Online Ordering Temporarily Closed
+            </h1>
+            <p className="text-muted-foreground mb-8">
+              We're not accepting online pickup orders right now. Please call us to place your order.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-brand-green hover:bg-brand-green/90">
+                <a href="tel:5198245741">
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call (519) 824-5741
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to="/menu">Back to Menu</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (

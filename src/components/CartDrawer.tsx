@@ -1,14 +1,19 @@
 import { useCart } from "@/contexts/CartContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, AlertTriangle, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { usePickupSettings } from "@/hooks/usePickupSettings";
 
 export function CartDrawer() {
   const { items, isOpen, setIsOpen, updateQuantity, removeItem, subtotal, tax, total, totalItems, clearCart } = useCart();
   const navigate = useNavigate();
+  const { pickupEnabled } = usePickupSettings();
 
   const handleCheckout = () => {
+    if (!pickupEnabled) {
+      return;
+    }
     setIsOpen(false);
     navigate("/checkout");
   };
@@ -89,9 +94,26 @@ export function CartDrawer() {
             </div>
 
             <SheetFooter className="flex-col gap-2 sm:flex-col pt-4">
-              <Button onClick={handleCheckout} size="lg" className="w-full bg-brand-orange hover:bg-brand-orange/90">
-                Proceed to Checkout
-              </Button>
+              {!pickupEnabled ? (
+                <div className="w-full space-y-3">
+                  <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-center">
+                    <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <p className="text-sm text-red-600 dark:text-red-400">
+                      Online ordering is temporarily closed
+                    </p>
+                  </div>
+                  <Button asChild size="lg" className="w-full bg-brand-green hover:bg-brand-green/90">
+                    <a href="tel:5198245741">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call to Order: (519) 824-5741
+                    </a>
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={handleCheckout} size="lg" className="w-full bg-brand-orange hover:bg-brand-orange/90">
+                  Proceed to Checkout
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={clearCart} className="text-muted-foreground">
                 Clear Cart
               </Button>
