@@ -2,6 +2,7 @@ import jollofRice from "@/assets/gallery/jollof-rice.webp";
 import jerkChicken from "@/assets/gallery/jerk-chicken.webp";
 import curryGoat from "@/assets/gallery/curry-goat.webp";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
+import pressImage from "@/assets/press/guelph-today-feature.png";
 
 export interface BlogPost {
   id: string;
@@ -33,9 +34,9 @@ export const blogPosts: BlogPost[] = [
       <p>Located at 45 Cork St E, Mama Favourite Kitchen serves lunch specials starting at just $7.50 and is quickly becoming a local favorite for those seeking authentic, flavorful cuisine.</p>
     `,
     category: "press",
-    featuredImage: jollofRice,
+    featuredImage: pressImage,
     author: "Guelph Today",
-    publishedAt: "2024-01-15",
+    publishedAt: "2025-08-20",
     readTime: "3 min read",
     externalUrl: "https://www.guelphtoday.com/lets-eat/new-african-and-caribbean-restaurant-spices-up-downtown-guelph-11096784",
   },
