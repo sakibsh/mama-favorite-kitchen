@@ -1,9 +1,11 @@
 import { useParams, Link, Navigate } from "react-router-dom";
-import { Calendar, Clock, ArrowLeft, ExternalLink, Share2 } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, ExternalLink, Share2, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { getBlogPostBySlug, blogPosts } from "@/data/blogPosts";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const categoryColors = {
   press: "bg-brand-gold/10 text-brand-gold",
@@ -22,6 +24,7 @@ const categoryLabels = {
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getBlogPostBySlug(slug) : undefined;
+  const [copied, setCopied] = useState(false);
 
   // If it's an external press article, redirect
   if (post?.externalUrl) {
@@ -38,16 +41,31 @@ const BlogPost = () => {
     .slice(0, 2);
 
   const handleShare = async () => {
+    const shareData = {
+      title: post.title,
+      text: post.excerpt,
+      url: window.location.href,
+    };
+
+    // Try native share first (works on mobile and some desktop browsers)
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: window.location.href,
-        });
+        await navigator.share(shareData);
+        return;
       } catch (err) {
-        console.log("Error sharing:", err);
+        // User cancelled or error - fall through to clipboard
+        if ((err as Error).name === "AbortError") return;
       }
+    }
+
+    // Fallback: copy to clipboard
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      toast.success("Link copied to clipboard!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy link");
     }
   };
 
@@ -156,8 +174,17 @@ const BlogPost = () => {
           {/* Share & Actions */}
           <div className="flex flex-col sm:flex-row gap-4 py-8 border-t border-border">
             <Button onClick={handleShare} variant="outline" className="rounded-full">
-              <Share2 className="mr-2 h-4 w-4" />
-              Share Article
+              {copied ? (
+                <>
+                  <Check className="mr-2 h-4 w-4 text-green-500" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Article
+                </>
+              )}
             </Button>
             <Button asChild className="bg-brand-orange hover:bg-brand-orange/90 text-white rounded-full">
               <Link to="/menu">View Our Menu</Link>
