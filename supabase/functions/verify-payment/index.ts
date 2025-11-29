@@ -29,6 +29,12 @@ serve(async (req) => {
 
     console.log("Verifying payment for session:", sessionId);
 
+    // Initialize Supabase client early for idempotency check
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
     // Retrieve the checkout session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
@@ -54,13 +60,33 @@ serve(async (req) => {
     const tax = parseFloat(metadata.tax || "0");
     const total = parseFloat(metadata.total || "0");
 
-    console.log("Payment verified, order number:", orderNumber);
+    // IDEMPOTENCY CHECK: Check if order already exists
+    const { data: existingOrder } = await supabaseClient
+      .from("orders")
+      .select("order_number")
+      .eq("order_number", orderNumber)
+      .maybeSingle();
 
-    // Initialize Supabase client
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    if (existingOrder) {
+      console.log("Order already processed, returning cached result:", orderNumber);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          orderNumber,
+          customerName,
+          customerEmail,
+          pickupTime,
+          total,
+          alreadyProcessed: true,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        }
+      );
+    }
+
+    console.log("Payment verified, saving new order:", orderNumber);
 
     // Save order to database
     const { error: orderError } = await supabaseClient.from("orders").insert([{
@@ -79,12 +105,32 @@ serve(async (req) => {
 
     if (orderError) {
       console.error("Error saving order:", orderError);
-      // Continue even if order save fails - payment was successful
-    } else {
-      console.log("Order saved to database");
+      // If it's a duplicate key error, the order was already saved by another request
+      if (orderError.code === "23505") {
+        console.log("Order already exists (race condition), returning success without notifications");
+        return new Response(
+          JSON.stringify({
+            success: true,
+            orderNumber,
+            customerName,
+            customerEmail,
+            pickupTime,
+            total,
+            alreadyProcessed: true,
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 200,
+          }
+        );
+      }
+      // For other errors, continue but don't send notifications
+      throw new Error(`Failed to save order: ${orderError.message}`);
     }
 
-    // Send confirmation emails and SMS
+    console.log("Order saved to database, sending notifications");
+
+    // Only send notifications after successful FIRST save
     try {
       const emailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-order-emails`, {
         method: "POST",
@@ -108,7 +154,7 @@ serve(async (req) => {
       console.log("Email/SMS notification sent:", await emailResponse.json());
     } catch (emailError) {
       console.error("Error sending notifications:", emailError);
-      // Continue even if notifications fail
+      // Continue even if notifications fail - order was saved successfully
     }
 
     return new Response(
