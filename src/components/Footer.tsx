@@ -17,9 +17,9 @@ const Footer = () => {
             />
             <p className="text-sm opacity-90 italic">Food that nurtures souls</p>
             <Button asChild size="sm" variant="outline" className="mt-2 bg-white text-secondary hover:bg-white/90">
-              <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
-                Order on Uber Eats
-              </a>
+              <Link to="/menu">
+                Order Pickup
+              </Link>
             </Button>
           </div>
 

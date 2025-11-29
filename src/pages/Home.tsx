@@ -230,9 +230,9 @@ const Home = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button asChild size="lg" className="text-lg h-12 px-8 rounded-full bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg border border-brand-orange/50">
-                  <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                    Order Now <ArrowRight className="w-5 h-5" />
-                  </a>
+                  <Link to="/menu" className="flex items-center gap-2">
+                    Order Pickup <ArrowRight className="w-5 h-5" />
+                  </Link>
                 </Button>
               </motion.div>
               
