@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback, useEffect, useState, useMemo } from "react";
-import jerkChicken from "@/assets/gallery/jerk-chicken.jpg";
-import jollofRice from "@/assets/gallery/jollof-rice.jpg";
-import curryGoat from "@/assets/gallery/curry-goat.jpg";
-import fufuEgusi from "@/assets/gallery/fufu-egusi.jpg";
+import jerkChicken from "@/assets/gallery/jerk-chicken.webp";
+import jollofRice from "@/assets/gallery/jollof-rice.webp";
+import curryGoat from "@/assets/gallery/curry-goat.webp";
+import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -60,9 +60,8 @@ const Home = () => {
 
   // Hero slider images
   const heroSlides = [
-    "/slider/s1.jpg",
-    "/slider/s2.jpg",
-    "/slider/s3.jpg",
+    "/slider/s1.webp",
+    "/slider/s2.webp",
   ];
 
   const scrollTo = useCallback(
