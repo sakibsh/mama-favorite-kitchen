@@ -11,7 +11,8 @@ import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { motion, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { PressSection } from "@/components/PressSection";
+import { motion, useSpring, useMotionValue } from "framer-motion";
 
 const Home = () => {
   // Hero slider
@@ -462,6 +463,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Press / As Seen In Section */}
+      <PressSection />
 
       {/* Catering Section */}
       <section className="py-24 relative overflow-hidden">
