@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +22,9 @@ export default function PaymentSuccess() {
   const [isVerifying, setIsVerifying] = useState(true);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // Prevent duplicate verification calls (React StrictMode / re-renders)
+  const verificationAttempted = useRef(false);
 
   useEffect(() => {
     const sessionId = searchParams.get("session_id");
@@ -30,6 +33,26 @@ export default function PaymentSuccess() {
       setError("No payment session found");
       setIsVerifying(false);
       return;
+    }
+
+    // Prevent duplicate calls from React StrictMode or re-renders
+    if (verificationAttempted.current) {
+      return;
+    }
+    verificationAttempted.current = true;
+
+    // Check if already verified in this browser session
+    const cachedResult = sessionStorage.getItem(`verified_${sessionId}`);
+    if (cachedResult) {
+      try {
+        const cached = JSON.parse(cachedResult);
+        setOrderDetails(cached);
+        setIsVerifying(false);
+        clearCart();
+        return;
+      } catch {
+        // Invalid cache, continue with verification
+      }
     }
 
     const verifyPayment = async () => {
@@ -41,14 +64,18 @@ export default function PaymentSuccess() {
         if (fnError) throw fnError;
 
         if (data.success) {
-          setOrderDetails({
+          const details: OrderDetails = {
             orderNumber: data.orderNumber,
             customerName: data.customerName,
             customerEmail: data.customerEmail,
             pickupTime: data.pickupTime,
             total: data.total,
-          });
+          };
+          setOrderDetails(details);
           clearCart();
+          
+          // Cache the result to prevent re-verification on page refresh
+          sessionStorage.setItem(`verified_${sessionId}`, JSON.stringify(details));
         } else {
           setError(data.message || "Payment verification failed");
         }
