@@ -1,45 +1,39 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export function DitherBackground() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
   return (
     <>
-      <div className="bg-noise fixed inset-0 z-0 pointer-events-none opacity-[0.04]" />
+      <div className="bg-noise fixed inset-0 z-0 pointer-events-none opacity-[0.03]" />
       <div className="fixed inset-0 z-[-1] overflow-hidden bg-background">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full bg-brand-orange/20 blur-[100px] mix-blend-multiply dark:mix-blend-screen filter"
+        {/* Simplified static blobs with CSS animations instead of framer-motion */}
+        <div
+          className={`absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full bg-brand-orange/15 blur-[120px] ${
+            prefersReducedMotion ? "" : "animate-blob"
+          }`}
+          style={{ willChange: prefersReducedMotion ? "auto" : "transform" }}
         />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [0, -90, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-brand-gold/20 blur-[100px] mix-blend-multiply dark:mix-blend-screen filter"
+        <div
+          className={`absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-brand-gold/15 blur-[120px] ${
+            prefersReducedMotion ? "" : "animate-blob animation-delay-2000"
+          }`}
+          style={{ willChange: prefersReducedMotion ? "auto" : "transform" }}
         />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, 50, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute -bottom-[20%] left-[20%] w-[80vw] h-[80vw] rounded-full bg-brand-green/15 blur-[100px] mix-blend-multiply dark:mix-blend-screen filter"
+        <div
+          className={`absolute -bottom-[20%] left-[20%] w-[80vw] h-[80vw] rounded-full bg-brand-green/10 blur-[120px] ${
+            prefersReducedMotion ? "" : "animate-blob animation-delay-4000"
+          }`}
+          style={{ willChange: prefersReducedMotion ? "auto" : "transform" }}
         />
       </div>
     </>

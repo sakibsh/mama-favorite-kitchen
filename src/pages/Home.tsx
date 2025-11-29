@@ -3,14 +3,15 @@ import { Phone, MapPin, Clock, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import jerkChicken from "@/assets/gallery/jerk-chicken.jpg";
 import jollofRice from "@/assets/gallery/jollof-rice.jpg";
 import curryGoat from "@/assets/gallery/curry-goat.jpg";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.jpg";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
+import { OptimizedImage } from "@/components/OptimizedImage";
+import { motion, useSpring, useMotionValue, useTransform } from "framer-motion";
 
 const Home = () => {
   // Hero slider
@@ -33,23 +34,29 @@ const Home = () => {
   const [heroIndex, setHeroIndex] = useState(0);
   const [selectedTestimonialIndex, setSelectedTestimonialIndex] = useState(0);
 
-  // Mouse parallax effect for Hero Text
+  // Simplified parallax - disabled on mobile for performance
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (isMobile) return; // Skip on mobile
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
-    const x = clientX / innerWidth - 0.5;
-    const y = clientY / innerHeight - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  }, [mouseX, mouseY]);
+    mouseX.set((clientX / innerWidth - 0.5) * 20);
+    mouseY.set((clientY / innerHeight - 0.5) * 20);
+  }, [isMobile, mouseX, mouseY]);
 
-  const heroTextX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-30, 30]), { stiffness: 150, damping: 15 });
-  const heroTextY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-30, 30]), { stiffness: 150, damping: 15 });
-  const heroBgX = useSpring(useTransform(mouseX, [-0.5, 0.5], [20, -20]), { stiffness: 100, damping: 20 });
-  const heroBgY = useSpring(useTransform(mouseY, [-0.5, 0.5], [20, -20]), { stiffness: 100, damping: 20 });
+  const heroTextX = useSpring(mouseX, { stiffness: 100, damping: 20 });
+  const heroTextY = useSpring(mouseY, { stiffness: 100, damping: 20 });
 
   // Hero slider images
   const heroSlides = [
@@ -172,22 +179,11 @@ const Home = () => {
           <div className="flex h-full">
             {heroSlides.map((slide, index) => (
               <div key={index} className="flex-[0_0_100%] min-w-0 relative h-full overflow-hidden">
-                <motion.div
-                  initial={{ scale: 1.2 }}
-                  animate={{ 
-                    scale: heroIndex === index ? 1.05 : 1.2,
-                  }}
-                  style={{
-                    backgroundImage: `url(${slide})`,
-                    x: heroBgX,
-                    y: heroBgY
-                  }}
-                  transition={{ 
-                    scale: { duration: 8, ease: "linear" },
-                  }}
-                  className="absolute inset-0 bg-cover bg-center"
+                <div
+                  style={{ backgroundImage: `url(${slide})` }}
+                  className="absolute inset-0 bg-cover bg-center scale-105"
                 />
-                {/* Gradient Overlay - Lighter to see images better */}
+                {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
               </div>
@@ -292,15 +288,12 @@ const Home = () => {
                     className="flex-[0_0_85%] min-w-0 sm:flex-[0_0_45%] lg:flex-[0_0_30%]"
                   >
                     <InteractiveCard className="h-full border-none bg-white/50 dark:bg-black/50">
-                      <div className="overflow-hidden rounded-xl mb-4 aspect-[4/3]">
-                        <motion.img
-                          whileHover={{ scale: 1.15 }}
-                          transition={{ duration: 0.6 }}
-                          src={dish.image}
-                          alt={dish.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
+                      <OptimizedImage
+                        src={dish.image}
+                        alt={dish.name}
+                        wrapperClassName="rounded-xl mb-4 aspect-[4/3]"
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      />
                       <div className="p-2">
                         <h3 className="text-2xl font-display font-bold text-foreground mb-2">
                           {dish.name}
