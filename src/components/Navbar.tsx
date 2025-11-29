@@ -24,15 +24,15 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 transition-smooth hover:scale-105">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 transition-smooth hover:scale-105">
             <img 
               src={logo} 
               alt="Mama Favourite Kitchen" 
-              className="h-12 sm:h-14 w-auto object-contain drop-shadow-md" 
+              className="h-10 sm:h-14 w-auto object-contain drop-shadow-md" 
             />
-            <div className="hidden sm:block leading-none tracking-tight text-left">
-              <span className="block font-script text-2xl sm:text-3xl text-foreground -mb-2 relative z-10 transform -rotate-2 origin-bottom-left">Mama Favourite</span>
-              <span className="block font-display font-bold text-3xl sm:text-5xl text-shader tracking-normal uppercase">KITCHEN</span>
+            <div className="leading-none tracking-tight text-left">
+              <span className="block font-script text-base sm:text-3xl text-foreground -mb-0.5 sm:-mb-2 relative z-10 transform -rotate-2 origin-bottom-left">Mama Favourite</span>
+              <span className="block font-display font-bold text-lg sm:text-5xl text-shader tracking-normal uppercase">KITCHEN</span>
             </div>
           </Link>
 
