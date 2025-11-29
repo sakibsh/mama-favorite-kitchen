@@ -10,10 +10,11 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShaderText } from "@/components/ShaderText";
-import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, UserPlus } from "lucide-react";
+import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, UserPlus, Power } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
+import { usePickupSettings } from "@/hooks/usePickupSettings";
 
 interface Order {
   id: string;
@@ -81,6 +82,8 @@ export default function Admin() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const { pickupEnabled, togglePickup } = usePickupSettings();
+  const [isTogglingPickup, setIsTogglingPickup] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -372,6 +375,49 @@ export default function Admin() {
             </Button>
           </div>
         </div>
+
+        {/* Pickup Toggle Card */}
+        <Card className={`mb-6 border-2 ${pickupEnabled ? "border-green-500/50 bg-green-50/50 dark:bg-green-950/20" : "border-red-500/50 bg-red-50/50 dark:bg-red-950/20"}`}>
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${pickupEnabled ? "bg-green-500" : "bg-red-500"}`}>
+                  <Power className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">
+                    Online Pickup Orders: {pickupEnabled ? "OPEN" : "CLOSED"}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {pickupEnabled 
+                      ? "Customers can place pickup orders online" 
+                      : "Online ordering is currently disabled"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-medium ${pickupEnabled ? "text-green-600" : "text-red-600"}`}>
+                  {pickupEnabled ? "Open" : "Closed"}
+                </span>
+                <Switch
+                  checked={pickupEnabled}
+                  disabled={isTogglingPickup}
+                  onCheckedChange={async (checked) => {
+                    setIsTogglingPickup(true);
+                    const success = await togglePickup(checked);
+                    if (success) {
+                      toast.success(checked ? "Pickup orders are now OPEN" : "Pickup orders are now CLOSED");
+                    } else {
+                      toast.error("Failed to update pickup status");
+                    }
+                    setIsTogglingPickup(false);
+                  }}
+                  className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="orders" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
