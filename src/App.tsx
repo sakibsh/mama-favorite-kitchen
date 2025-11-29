@@ -16,6 +16,8 @@ import { CartDrawer } from "./components/CartDrawer";
 const Menu = lazy(() => import("./pages/Menu"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const Admin = lazy(() => import("./pages/Admin"));
@@ -49,6 +51,8 @@ const App = () => (
                   <Route path="/menu" element={<Menu />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route path="/admin" element={<Admin />} />
