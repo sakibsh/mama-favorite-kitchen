@@ -233,7 +233,7 @@ Total: $${order.total.toFixed(2)}${order.specialInstructions ? `\n\n⚠️ Note:
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Mama Favourite Kitchen <onboarding@resend.dev>",
+          from: "Mama Favourite Kitchen <orders@vortio.com>",
           to: [order.customerEmail],
           subject: `Order Confirmation #${order.orderNumber} - Mama Favourite Kitchen`,
           html: customerEmailHtml,
@@ -248,7 +248,7 @@ Total: $${order.total.toFixed(2)}${order.specialInstructions ? `\n\n⚠️ Note:
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Mama Favourite Kitchen Orders <onboarding@resend.dev>",
+          from: "Mama Favourite Kitchen Orders <orders@vortio.com>",
           to: [CHEF_EMAIL],
           subject: `🍽️ NEW ORDER #${order.orderNumber} - ${order.customerName}`,
           html: chefEmailHtml,
