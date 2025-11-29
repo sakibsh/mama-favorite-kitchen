@@ -223,9 +223,9 @@ const Blog = () => {
                   variant="outline"
                   className="border-2 border-white text-white hover:bg-white/10 rounded-full"
                 >
-                  <a href="https://www.ubereats.com/ca/store/mama-favourite-kitchen/ZW1oBiR1Ux60yLVvZ7Vl1Q" target="_blank" rel="noopener noreferrer">
-                    Order Now
-                  </a>
+                  <Link to="/menu">
+                    Order Pickup
+                  </Link>
                 </Button>
               </div>
             </div>
