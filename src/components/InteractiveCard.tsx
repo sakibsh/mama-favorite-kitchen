@@ -19,10 +19,9 @@ export function InteractiveCard({
     <motion.div
       whileHover={{ 
         scale: 1.02,
-        rotate: Math.random() * 2 - 1, // Slight random rotation
         boxShadow: "0 20px 40px -10px rgba(0,0,0,0.2)" 
       }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
       <Card 
         className={cn(
