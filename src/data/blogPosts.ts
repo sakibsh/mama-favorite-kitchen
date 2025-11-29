@@ -1,3 +1,8 @@
+import jollofRice from "@/assets/gallery/jollof-rice.webp";
+import jerkChicken from "@/assets/gallery/jerk-chicken.webp";
+import curryGoat from "@/assets/gallery/curry-goat.webp";
+import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -28,7 +33,7 @@ export const blogPosts: BlogPost[] = [
       <p>Located at 45 Cork St E, Mama Favourite Kitchen serves lunch specials starting at just $7.50 and is quickly becoming a local favorite for those seeking authentic, flavorful cuisine.</p>
     `,
     category: "press",
-    featuredImage: "/slider/s1.webp",
+    featuredImage: jollofRice,
     author: "Guelph Today",
     publishedAt: "2024-01-15",
     readTime: "3 min read",
@@ -52,7 +57,7 @@ export const blogPosts: BlogPost[] = [
       <p>Our jollof rice recipe has been perfected over generations, featuring long-grain rice cooked in a rich tomato base with traditional spices. We serve it with perfectly grilled chicken and fresh coleslaw—a true taste of West Africa right here in Guelph.</p>
     `,
     category: "culture",
-    featuredImage: "/slider/s2.webp",
+    featuredImage: jollofRice,
     author: "Mama Favourite Kitchen",
     publishedAt: "2024-02-01",
     readTime: "5 min read",
@@ -75,7 +80,7 @@ export const blogPosts: BlogPost[] = [
       <p>At Mama Favourite Kitchen, we honor this tradition with our perfectly seasoned jerk chicken, served with rice and peas and sweet fried plantains. Our lunch special at $7.50 is the best deal in town for authentic Caribbean flavors.</p>
     `,
     category: "culture",
-    featuredImage: "/slider/s1.webp",
+    featuredImage: jerkChicken,
     author: "Mama Favourite Kitchen",
     publishedAt: "2024-02-15",
     readTime: "4 min read",
@@ -98,7 +103,7 @@ export const blogPosts: BlogPost[] = [
       <p>Egusi soup is traditionally served with fufu, pounded yam, or eba (garri). At Mama Favourite Kitchen, we serve it with freshly made fufu that's perfectly smooth and stretchy—the ideal vessel for scooping up every delicious bit of soup.</p>
     `,
     category: "culture",
-    featuredImage: "/slider/s2.webp",
+    featuredImage: fufuEgusi,
     author: "Mama Favourite Kitchen",
     publishedAt: "2024-03-01",
     readTime: "4 min read",
