@@ -174,14 +174,18 @@ const Home = () => {
         className="relative h-[90vh] min-h-[700px] overflow-hidden flex items-center"
         onMouseMove={handleMouseMove}
       >
-        {/* Background Slider with Ken Burns Effect */}
+        {/* Background Slider with Optimized Images */}
         <div className="absolute inset-0 z-0" ref={emblaRefHero}>
           <div className="flex h-full">
             {heroSlides.map((slide, index) => (
               <div key={index} className="flex-[0_0_100%] min-w-0 relative h-full overflow-hidden">
-                <div
-                  style={{ backgroundImage: `url(${slide})` }}
-                  className="absolute inset-0 bg-cover bg-center scale-105"
+                <img
+                  src={slide}
+                  alt={`Hero slide ${index + 1}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding={index === 0 ? "sync" : "async"}
+                  fetchPriority={index === 0 ? "high" : "low"}
+                  className="absolute inset-0 w-full h-full object-cover scale-105"
                 />
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-black/40" />
