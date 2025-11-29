@@ -42,7 +42,7 @@ const Menu = () => {
       title: "Lunch Special",
       subtitle: lunchAvailable 
         ? "Available Mon-Fri until 2:30 PM" 
-        : `Currently unavailable • ${getNextLunchSpecialTime()}`,
+        : "Currently unavailable • Lunch Specials Monday to Friday (11 am - 2.30 pm)",
       orderable: true,
       isLunchSpecial: true,
       items: [
