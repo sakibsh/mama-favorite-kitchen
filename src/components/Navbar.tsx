@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartButton } from "@/components/CartButton";
-import logo from "@/assets/logo-nobg.png";
+import logo from "@/assets/logonotext.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,12 +24,16 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center transition-smooth hover:scale-105">
+          <Link to="/" className="flex items-center gap-3 transition-smooth hover:scale-105">
             <img 
               src={logo} 
               alt="Mama Favourite Kitchen" 
-              className="h-16 sm:h-20 w-auto object-contain drop-shadow-md" 
+              className="h-12 sm:h-14 w-auto object-contain drop-shadow-md" 
             />
+            <div className="hidden sm:block leading-none tracking-tight text-left">
+              <span className="block font-script text-2xl sm:text-3xl text-foreground -mb-2 relative z-10 transform -rotate-2 origin-bottom-left">Mama Favourite</span>
+              <span className="block font-display font-bold text-3xl sm:text-5xl text-shader tracking-normal uppercase">KITCHEN</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

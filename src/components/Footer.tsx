@@ -1,7 +1,7 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo-nobg.png";
+import logo from "@/assets/logonotext.png";
 
 const Footer = () => {
   return (
@@ -10,11 +10,17 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo & Tagline */}
           <div className="space-y-4">
-            <img 
-              src={logo} 
-              alt="Mama Favourite Kitchen" 
-              className="h-28 w-auto object-contain drop-shadow-lg brightness-110" 
-            />
+            <div className="flex items-center gap-3">
+              <img 
+                src={logo} 
+                alt="Mama Favourite Kitchen" 
+                className="h-16 w-auto object-contain drop-shadow-lg brightness-110" 
+              />
+              <div className="leading-none tracking-tight text-left">
+                <span className="block font-script text-2xl text-secondary-foreground -mb-1 relative z-10 transform -rotate-2 origin-bottom-left">Mama Favourite</span>
+                <span className="block font-display font-bold text-4xl text-shader tracking-normal uppercase">KITCHEN</span>
+              </div>
+            </div>
             <p className="text-sm opacity-90 italic">Food that nurtures souls</p>
             <Button asChild size="sm" variant="outline" className="mt-2 bg-white text-secondary hover:bg-white/90">
               <Link to="/menu">

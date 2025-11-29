@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ['Space Grotesk', 'Inter', 'sans-serif'],
         display: ['Syne', 'Playfair Display', 'serif'],
+        script: ['Pacifico', 'cursive'],
       },
       colors: {
         'brand-orange': 'hsl(var(--brand-orange))',

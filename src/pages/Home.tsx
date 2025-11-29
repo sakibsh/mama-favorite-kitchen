@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, MapPin, Clock, Star, ArrowRight } from "lucide-react";
+import { Phone, MapPin, Clock, Star, ArrowRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -344,7 +344,7 @@ const Home = () => {
               <ShaderText as="h2" text="Today's Special" className="text-5xl md:text-7xl mb-4" />
             </div>
             
-            <InteractiveCard className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border-2 border-brand-gold/30">
+            <InteractiveCard className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border-2 border-brand-gold/30 mb-16">
               <div className="p-8 md:p-12">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                   <div className="space-y-6 relative">
@@ -379,64 +379,72 @@ const Home = () => {
                 </div>
               </div>
             </InteractiveCard>
-          </div>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <ShaderText as="h2" text="Why Choose Us" className="text-4xl md:text-6xl" />
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              { icon: Star, title: "Authentic Flavors", text: "Traditional recipes passed down through generations, made with love and care", color: "text-brand-gold" },
-              { icon: Clock, title: "Fresh Daily", text: "All dishes prepared fresh daily with the finest ingredients and spices", color: "text-brand-green" },
-              { icon: MapPin, title: "Downtown Location", text: "Conveniently located in the heart of Guelph at 45 Cork St E", color: "text-brand-orange" }
-            ].map((feature, i) => (
-              <InteractiveCard key={i} className="h-full bg-card/50 hover:bg-card transition-colors">
-                <div className="p-8 text-center">
-                  <div className={`w-20 h-20 mx-auto mb-6 rounded-3xl bg-background shadow-soft flex items-center justify-center ${feature.color}`}>
-                    <feature.icon className="h-10 w-10" />
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { icon: Star, title: "Authentic Flavors", text: "Traditional recipes passed down through generations", color: "text-brand-gold" },
+                { icon: Clock, title: "Fresh Daily", text: "All dishes prepared fresh daily with the finest ingredients", color: "text-brand-green" },
+                { icon: MapPin, title: "Downtown Location", text: "Conveniently located in the heart of Guelph", color: "text-brand-orange" }
+              ].map((feature, i) => (
+                <InteractiveCard key={i} className="bg-white/50 dark:bg-black/50 border-none hover:bg-white/80 dark:hover:bg-black/80 transition-all">
+                  <div className="p-6 text-center flex flex-col items-center">
+                    <div className={`w-12 h-12 rounded-2xl bg-background shadow-sm flex items-center justify-center mb-4 ${feature.color}`}>
+                      <feature.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-display font-bold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {feature.text}
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-display font-bold mb-4">{feature.title}</h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed">
-                    {feature.text}
-                  </p>
-                </div>
-              </InteractiveCard>
-            ))}
+                </InteractiveCard>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 bg-muted/30 relative">
-        <div className="container mx-auto px-4">
+      {/* Testimonials - Carousel */}
+      <section className="py-24 bg-muted/30 relative overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-green/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <ShaderText as="h2" text="Customer Love" className="text-4xl md:text-6xl" />
+            <ShaderText as="h2" text="Customer Love" className="text-4xl md:text-6xl mb-4" />
+            <p className="text-xl text-muted-foreground">See what our community is saying</p>
           </div>
           
           <div className="max-w-7xl mx-auto">
-            <div className="overflow-hidden px-4" ref={emblaRefTestimonials}>
-              <div className="flex gap-8">
+            <div className="overflow-visible px-4" ref={emblaRefTestimonials}>
+              <div className="flex gap-6">
                 {testimonials.map((testimonial, index) => (
                   <div
                     key={index}
                     className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
                   >
-                    <InteractiveCard className="h-full bg-white dark:bg-black border border-border/50">
-                      <div className="p-8 flex flex-col h-full">
-                        <div className="flex gap-1 mb-6">
+                    <InteractiveCard className="h-full bg-white/60 dark:bg-black/60 backdrop-blur-sm border border-white/20 hover:border-brand-orange/30 transition-all duration-300 group">
+                      <div className="p-8 flex flex-col h-full relative">
+                        <Quote className="absolute top-6 right-6 h-8 w-8 text-brand-orange/20 rotate-180 group-hover:text-brand-orange/40 transition-colors" />
+                        
+                        <div className="flex gap-1 mb-4">
                           {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="h-5 w-5 fill-brand-gold text-brand-gold" />
+                            <Star key={i} className="h-4 w-4 fill-brand-gold text-brand-gold" />
                           ))}
                         </div>
-                        <p className="text-muted-foreground text-lg italic mb-8 flex-grow">"{testimonial.text}"</p>
-                        <div className="mt-auto pt-6 border-t border-border">
-                          <p className="font-bold text-foreground text-lg">{testimonial.name}</p>
+                        
+                        <p className="text-foreground/80 text-lg leading-relaxed mb-6 flex-grow font-medium">
+                          "{testimonial.text}"
+                        </p>
+                        
+                        <div className="mt-auto flex items-center gap-3 pt-4 border-t border-border/50">
+                          <div className="w-10 h-10 rounded-full bg-gradient-warm flex items-center justify-center text-brand-green font-bold text-sm shadow-sm">
+                            {testimonial.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                          </div>
+                          <div>
+                            <p className="font-bold text-foreground text-sm">{testimonial.name}</p>
+                            <p className="text-xs text-muted-foreground">Verified Customer</p>
+                          </div>
                         </div>
                       </div>
                     </InteractiveCard>
@@ -453,7 +461,7 @@ const Home = () => {
                   className={`h-3 rounded-full transition-all duration-500 ${
                     index === selectedTestimonialIndex
                       ? "bg-brand-green w-12"
-                      : "bg-muted-foreground/30 w-3 hover:bg-brand-green/50"
+                      : "bg-muted-foreground/20 w-3 hover:bg-brand-green/40"
                   }`}
                   onClick={() => scrollToTestimonial(index)}
                   aria-label={`Go to testimonial ${index + 1}`}
