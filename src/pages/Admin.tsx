@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShaderText } from "@/components/ShaderText";
-import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, UserPlus, Power } from "lucide-react";
+import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, Power } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
@@ -77,7 +77,6 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,11 +86,35 @@ export default function Admin() {
 
   useEffect(() => {
     checkAuth();
+    
+    // Listen for auth state changes (e.g., page refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        setOrders([]);
+      }
+    });
+    
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
+      // Verify user has admin role
+      const { data: isAdmin } = await supabase.rpc('has_role', {
+        _user_id: session.user.id,
+        _role: 'admin'
+      });
+      
+      if (!isAdmin) {
+        // User is authenticated but not an admin - sign them out
+        await supabase.auth.signOut();
+        toast.error("Access denied: Admin privileges required");
+        setIsLoading(false);
+        return;
+      }
+      
       setIsAuthenticated(true);
       await loadData();
     }
@@ -171,44 +194,34 @@ export default function Admin() {
     setIsLoading(true);
 
     try {
-      if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/admin`,
-          },
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        // Verify user has admin role
+        const { data: isAdmin } = await supabase.rpc('has_role', {
+          _user_id: data.session.user.id,
+          _role: 'admin'
         });
-
-        if (error) throw error;
-
-        if (data.user) {
-          // Add admin role for this user
-          const { error: roleError } = await supabase
-            .from("user_roles")
-            .insert({ user_id: data.user.id, role: "admin" });
-
-          if (roleError) {
-            console.error("Error assigning admin role:", roleError);
-          }
-
-          toast.success("Account created! You can now sign in.");
-          setIsSignUp(false);
+        
+        if (!isAdmin) {
+          // User authenticated but not an admin - sign them out
+          await supabase.auth.signOut();
+          toast.error("Access denied: Admin privileges required");
+          setIsLoading(false);
+          return;
         }
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) throw error;
-
+        
         setIsAuthenticated(true);
         await loadData();
         toast.success("Welcome back!");
       }
     } catch (error: any) {
-      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "login"}`);
+      toast.error(error.message || "Failed to login");
     } finally {
       setIsLoading(false);
     }
@@ -306,11 +319,11 @@ export default function Admin() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-              {isSignUp ? <UserPlus className="h-6 w-6 text-brand-orange" /> : <ChefHat className="h-6 w-6 text-brand-orange" />}
-              {isSignUp ? "Create Admin Account" : "Admin Login"}
+              <ChefHat className="h-6 w-6 text-brand-orange" />
+              Admin Login
             </CardTitle>
             <CardDescription>
-              {isSignUp ? "Create a new admin account" : "Sign in to manage orders and menu items"}
+              Sign in to manage orders and menu items
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -333,23 +346,17 @@ export default function Admin() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={isSignUp ? "Create a strong password" : ""}
                   minLength={6}
                   required
                 />
               </div>
               <Button type="submit" className="w-full bg-brand-orange hover:bg-brand-orange/90">
-                {isSignUp ? "Create Account" : "Sign In"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full"
-                onClick={() => setIsSignUp(!isSignUp)}
-              >
-                {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
+                Sign In
               </Button>
             </form>
+            <p className="text-xs text-muted-foreground text-center mt-4">
+              Access restricted to authorized administrators only
+            </p>
           </CardContent>
         </Card>
       </div>
