@@ -288,3 +288,5 @@ Total: $${order.total.toFixed(2)}${order.specialInstructions ? `\n\n⚠️ Note:
     );
   }
 });
+
+

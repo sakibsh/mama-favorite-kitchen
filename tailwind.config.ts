@@ -118,6 +118,10 @@ export default {
             transform: "scale(1)",
           },
         },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -125,6 +129,8 @@ export default {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "slide-up": "slide-up 0.6s ease-out forwards",
         "scale-in": "scale-in 0.4s ease-out forwards",
+        "spin-slow": "spin-slow 8s linear infinite",
+        "spin-slower": "spin-slow 12s linear infinite",
       },
     },
   },

@@ -111,9 +111,39 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-secondary-foreground/20 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Mama Favourite Kitchen. All rights reserved.</p>
-          <p className="mt-2 opacity-80">Serving authentic African & Caribbean cuisine since 2000</p>
+        <div className="mt-12 pt-8 border-t border-secondary-foreground/20 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-center md:text-left text-sm">
+            <p>&copy; {new Date().getFullYear()} Mama Favourite Kitchen. All rights reserved.</p>
+            <p className="mt-1 opacity-80">Serving authentic African & Caribbean cuisine since 2000</p>
+          </div>
+
+          <a 
+            href="https://vortio.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="group relative flex items-center gap-4 px-5 py-3 rounded-2xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-500 hover:border-brand-gold/50 hover:shadow-[0_0_40px_-10px_hsl(var(--brand-gold)/0.3)]"
+          >
+            {/* Icon Container */}
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              {/* Outer Glow */}
+              <div className="absolute inset-0 bg-brand-gold/20 rounded-full blur-xl group-hover:bg-brand-gold/40 transition-all duration-500" />
+              
+              {/* Spinning Rings (Vortex Effect) */}
+              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-brand-gold border-r-brand-orange animate-[spin_3s_linear_infinite]" />
+              <div className="absolute inset-1.5 rounded-full border-2 border-transparent border-b-white/80 border-l-white/50 animate-[spin_2s_linear_infinite_reverse]" />
+              
+              {/* The V */}
+              <span className="relative z-10 font-black text-lg text-white italic tracking-tighter">V</span>
+            </div>
+
+            {/* Text Content */}
+            <div className="relative z-10 flex flex-col items-start leading-none">
+              <span className="text-[9px] font-mono text-white/60 uppercase tracking-widest mb-1 group-hover:text-brand-gold transition-colors">Designed by</span>
+              <span className="text-lg font-black tracking-widest text-white group-hover:tracking-[0.2em] transition-all duration-500">
+                VORTIO
+              </span>
+            </div>
+          </a>
         </div>
       </div>
     </footer>
