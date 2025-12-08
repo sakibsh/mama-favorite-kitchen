@@ -49,6 +49,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          acknowledged: boolean | null
           created_at: string
           customer_email: string
           customer_name: string
@@ -65,6 +66,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          acknowledged?: boolean | null
           created_at?: string
           customer_email: string
           customer_name: string
@@ -81,6 +83,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          acknowledged?: boolean | null
           created_at?: string
           customer_email?: string
           customer_name?: string

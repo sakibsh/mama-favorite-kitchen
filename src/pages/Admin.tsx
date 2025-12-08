@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,12 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShaderText } from "@/components/ShaderText";
-import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, Power } from "lucide-react";
+import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, Power, Bell, BellRing, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
-
+import { useOrderAlerts } from "@/hooks/useOrderAlerts";
 interface Order {
   id: string;
   order_number: string;
@@ -30,6 +30,7 @@ interface Order {
   pickup_time: string;
   special_instructions: string;
   created_at: string;
+  acknowledged: boolean;
 }
 
 interface MenuItem {
@@ -83,6 +84,34 @@ export default function Admin() {
   const [statusFilter, setStatusFilter] = useState("all");
   const { pickupEnabled, togglePickup } = usePickupSettings();
   const [isTogglingPickup, setIsTogglingPickup] = useState(false);
+  
+  // Callback for when orders are acknowledged
+  const handleOrderAcknowledged = useCallback((orderId: string, acknowledged: boolean) => {
+    setOrders(current => 
+      current.map(order => 
+        order.id === orderId ? { ...order, acknowledged } : order
+      )
+    );
+  }, []);
+
+  // Callback for refreshing orders (will be set after loadOrders is defined)
+  const refreshOrdersRef = useCallback(() => {
+    // This will trigger a re-fetch when called
+    window.dispatchEvent(new CustomEvent('refresh-orders'));
+  }, []);
+
+  // Order alerts hook
+  const { unacknowledgedOrders, acknowledgeOrder, isAudioEnabled, enableAudio } = useOrderAlerts(
+    orders.map(o => ({ 
+      id: o.id, 
+      order_number: o.order_number, 
+      customer_name: o.customer_name, 
+      acknowledged: o.acknowledged ?? false,
+      created_at: o.created_at 
+    })),
+    refreshOrdersRef,
+    handleOrderAcknowledged
+  );
 
   useEffect(() => {
     checkAuth();
@@ -152,6 +181,7 @@ export default function Admin() {
         ...row,
         items: row.items as Array<{ id: string; name: string; price: number; quantity: number }>,
         special_instructions: row.special_instructions || "",
+        acknowledged: row.acknowledged ?? false,
       }));
       setOrders(mappedOrders);
     } catch (error) {
@@ -160,6 +190,13 @@ export default function Admin() {
       setOrders([]);
     }
   };
+
+  // Listen for refresh-orders event from the alerts hook
+  useEffect(() => {
+    const handleRefresh = () => loadOrders();
+    window.addEventListener('refresh-orders', handleRefresh);
+    return () => window.removeEventListener('refresh-orders', handleRefresh);
+  }, []);
 
   const loadMenuItems = async () => {
     try {
@@ -426,6 +463,43 @@ export default function Admin() {
           </CardContent>
         </Card>
 
+        {/* Audio Alert Control Card */}
+        <Card className={`mb-6 border-2 ${isAudioEnabled ? "border-blue-500/50 bg-blue-50/50 dark:bg-blue-950/20" : "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20"}`}>
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isAudioEnabled ? "bg-blue-500" : "bg-orange-500"}`}>
+                  {isAudioEnabled ? <Volume2 className="h-5 w-5 text-white" /> : <VolumeX className="h-5 w-5 text-white" />}
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg flex items-center gap-2">
+                    Order Alerts: {isAudioEnabled ? "ENABLED" : "DISABLED"}
+                    {unacknowledgedOrders.length > 0 && (
+                      <Badge variant="destructive" className="animate-pulse">
+                        {unacknowledgedOrders.length} NEW
+                      </Badge>
+                    )}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {isAudioEnabled 
+                      ? "You'll hear alerts when new orders come in" 
+                      : "Tap to enable audio alerts for new orders"}
+                  </p>
+                </div>
+              </div>
+              {!isAudioEnabled && (
+                <Button 
+                  onClick={enableAudio}
+                  className="bg-brand-orange hover:bg-brand-orange/90"
+                >
+                  <Bell className="mr-2 h-4 w-4" />
+                  Enable Alerts
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="orders" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="orders" className="flex items-center gap-2">
@@ -486,83 +560,109 @@ export default function Admin() {
               </Card>
             ) : (
               <div className="grid gap-4">
-                {filteredOrders.map((order) => (
-                  <motion.div
-                    key={order.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <Card className={order.status === "ready" ? "border-green-500 border-2" : ""}>
-                      <CardHeader className="pb-3">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                              #{order.order_number}
-                              <Badge className={getStatusColor(order.status)}>
-                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                              </Badge>
-                            </CardTitle>
-                            <CardDescription className="flex items-center gap-2 mt-1">
-                              <Clock className="h-3 w-3" />
-                              {formatTodayTime(order.created_at)} • Pickup: {order.pickup_time}
-                            </CardDescription>
-                          </div>
-                          <Select
-                            value={order.status}
-                            onValueChange={(value) => updateOrderStatus(order.id, value)}
-                          >
-                            <SelectTrigger className="w-40">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="confirmed">Confirmed</SelectItem>
-                              <SelectItem value="preparing">Preparing</SelectItem>
-                              <SelectItem value="ready">Ready</SelectItem>
-                              <SelectItem value="completed">Completed</SelectItem>
-                              <SelectItem value="cancelled">Cancelled</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground">Customer</p>
-                            <p className="font-medium">{order.customer_name}</p>
-                            <p className="text-sm">{order.customer_phone}</p>
-                            <p className="text-sm">{order.customer_email}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground mb-2">Items</p>
-                            <ul className="space-y-1 text-sm">
-                              {order.items.map((item, idx) => (
-                                <li key={idx} className="flex justify-between">
-                                  <span>{item.quantity}x {item.name}</span>
-                                  <span>${(item.price * item.quantity).toFixed(2)}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                        {order.special_instructions && (
-                          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
-                            <p className="text-sm font-medium flex items-center gap-2">
-                              <AlertCircle className="h-4 w-4 text-yellow-600" />
-                              Special Instructions:
-                            </p>
-                            <p className="text-sm mt-1">{order.special_instructions}</p>
+                {filteredOrders.map((order) => {
+                  const isUnacknowledged = !order.acknowledged;
+                  return (
+                    <motion.div
+                      key={order.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <Card className={`${order.status === "ready" ? "border-green-500 border-2" : ""} ${isUnacknowledged ? "border-orange-500 border-2 animate-pulse" : ""}`}>
+                        {/* NEW ORDER Banner for unacknowledged orders */}
+                        {isUnacknowledged && (
+                          <div className="bg-orange-500 text-white px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <BellRing className="h-5 w-5 animate-bounce" />
+                              <span className="font-bold">NEW ORDER - Tap to Acknowledge</span>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => acknowledgeOrder(order.id)}
+                              className="bg-white text-orange-600 hover:bg-orange-100"
+                            >
+                              <Bell className="mr-2 h-4 w-4" />
+                              Received
+                            </Button>
                           </div>
                         )}
-                        <div className="flex justify-end pt-2 border-t">
-                          <p className="text-lg font-bold text-brand-orange">
-                            Total: ${order.total.toFixed(2)}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                        <CardHeader className="pb-3">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                #{order.order_number}
+                                <Badge className={getStatusColor(order.status)}>
+                                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                </Badge>
+                                {isUnacknowledged && (
+                                  <Badge variant="outline" className="border-orange-500 text-orange-600 animate-pulse">
+                                    NEW
+                                  </Badge>
+                                )}
+                              </CardTitle>
+                              <CardDescription className="flex items-center gap-2 mt-1">
+                                <Clock className="h-3 w-3" />
+                                {formatTodayTime(order.created_at)} • Pickup: {order.pickup_time}
+                              </CardDescription>
+                            </div>
+                            <Select
+                              value={order.status}
+                              onValueChange={(value) => updateOrderStatus(order.id, value)}
+                            >
+                              <SelectTrigger className="w-40">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="confirmed">Confirmed</SelectItem>
+                                <SelectItem value="preparing">Preparing</SelectItem>
+                                <SelectItem value="ready">Ready</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Customer</p>
+                              <p className="font-medium">{order.customer_name}</p>
+                              <p className="text-sm">{order.customer_phone}</p>
+                              <p className="text-sm">{order.customer_email}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-2">Items</p>
+                              <ul className="space-y-1 text-sm">
+                                {order.items.map((item, idx) => (
+                                  <li key={idx} className="flex justify-between">
+                                    <span>{item.quantity}x {item.name}</span>
+                                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                          {order.special_instructions && (
+                            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
+                              <p className="text-sm font-medium flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-yellow-600" />
+                                Special Instructions:
+                              </p>
+                              <p className="text-sm mt-1">{order.special_instructions}</p>
+                            </div>
+                          )}
+                          <div className="flex justify-end pt-2 border-t">
+                            <p className="text-lg font-bold text-brand-orange">
+                              Total: ${order.total.toFixed(2)}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </TabsContent>
