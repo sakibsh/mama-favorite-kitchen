@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calendar, Clock, ArrowRight, ExternalLink, Newspaper } from "lucide-react";
+import { Calendar, Clock, ArrowRight, ExternalLink, Newspaper, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { ShaderText } from "@/components/ShaderText";
@@ -7,23 +7,26 @@ import { SEOHead } from "@/components/SEOHead";
 import { blogPosts } from "@/data/blogPosts";
 import { motion } from "framer-motion";
 
-const categoryColors = {
+const categoryColors: Record<string, string> = {
   press: "bg-brand-gold/10 text-brand-gold",
   culture: "bg-brand-green/10 text-brand-green",
   recipes: "bg-brand-orange/10 text-brand-orange",
   news: "bg-blue-500/10 text-blue-600",
+  community: "bg-purple-500/10 text-purple-600",
 };
 
-const categoryLabels = {
+const categoryLabels: Record<string, string> = {
   press: "Press Coverage",
   culture: "Food & Culture",
   recipes: "Recipes",
   news: "News",
+  community: "Community",
 };
 
 const Blog = () => {
   const pressArticles = blogPosts.filter((post) => post.category === "press");
-  const otherPosts = blogPosts.filter((post) => post.category !== "press");
+  const communityPosts = blogPosts.filter((post) => post.category === "community");
+  const otherPosts = blogPosts.filter((post) => post.category !== "press" && post.category !== "community");
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -127,6 +130,77 @@ const Blog = () => {
                           </Link>
                         </Button>
                       )}
+                    </div>
+                  </InteractiveCard>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Community Section */}
+      {communityPosts.length > 0 && (
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <Users className="w-6 h-6 text-purple-600" />
+              <h2 className="text-2xl font-display font-bold">Community</h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {communityPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <InteractiveCard className="h-full bg-gradient-to-br from-purple-500/5 to-transparent border-2 border-purple-500/20">
+                    <div className="aspect-video overflow-hidden rounded-t-xl">
+                      <img
+                        src={post.featuredImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${categoryColors[post.category]}`}>
+                          {categoryLabels[post.category]}
+                        </span>
+                        <span className="text-sm text-muted-foreground">{post.author}</span>
+                      </div>
+
+                      <h3 className="text-xl font-display font-bold mb-3 text-foreground line-clamp-2">
+                        {post.title}
+                      </h3>
+
+                      <p className="text-muted-foreground mb-4 line-clamp-3">
+                        {post.excerpt}
+                      </p>
+
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {post.readTime}
+                        </span>
+                      </div>
+
+                      <Button asChild className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                        <Link to={`/blog/${post.slug}`}>
+                          Read Article
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </div>
                   </InteractiveCard>
                 </motion.div>
