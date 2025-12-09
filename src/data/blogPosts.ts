@@ -151,13 +151,13 @@ export const blogPosts: BlogPost[] = [
       <p>On our side, it is now much easier to update menu items and prices, adjust hours for holidays or special events, and highlight limited-time dishes or catering options. This means the information you see online is more accurate and fresh.</p>
       
       <h2>Keeping More from Every Order</h2>
-      <p>Before this redesign, a large share of our online orders went through third-party delivery apps. These platforms can be useful for discovery, but the commissions are often very high—many restaurants see fees in the range of 25 to 30 percent on each order.</p>
+      <p>Before this redesign, a large share of our online orders went through third-party delivery apps. These platforms can be useful for discovery, but the commissions are often very high. Many restaurants see fees in the range of 25 to 30 percent on each order.</p>
       <p>As part of the new website, Vortio built a <strong>simple in-house ordering system</strong> for pickup directly on our site. When guests place an order through our website, that money stays with our team instead of going to commission fees, and the ordering experience is still easy and mobile-friendly.</p>
       
       <h2>Thank You for Being Part of Our Story</h2>
       <p>Since 2000, Mama Favourite Kitchen has been about more than food. It has always been about comfort, culture, and a sense of home. Our new website is one more way to stay connected with you, whether you are discovering us for the first time or coming back for your usual order.</p>
       <p>Thank you for reading, and thank you for supporting local businesses in Guelph.</p>
-      <p>If you like what you see on our site and are looking for someone to help with your own, you can visit <strong><a href="https://vortio.ca/" target="_blank" rel="noopener noreferrer">Vortio</a></strong> to learn more about the team that designed and built our new home online.</p>
+      <p>If you like what you see on our site and are looking for someone to help with your own, you can visit <strong><a href="https://vortio.ca/" target="_blank" rel="noopener noreferrer">Vortio, a Guelph-based digital consultancy</a></strong>, to learn more about the team that designed and built our new home online.</p>
     `,
     category: "community",
     featuredImage: vortioPartnership,
