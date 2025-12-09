@@ -47,7 +47,7 @@ export const blogPosts: BlogPost[] = [
     title: "The History of Jollof Rice: West Africa's Most Beloved Dish",
     excerpt: "Discover the rich history and cultural significance of jollof rice, the iconic West African dish that has sparked friendly rivalries between nations.",
     content: `
-      <p>Jollof rice is more than just a dish—it's a cultural icon that represents the heart of West African cuisine. At Mama Favourite Kitchen, we take pride in serving authentic jollof that honors this rich tradition.</p>
+      <p>Jollof rice is more than just a dish. It is a cultural icon that represents the heart of West African cuisine. At Mama Favourite Kitchen, we take pride in serving authentic jollof that honors this rich tradition.</p>
       
       <h2>Origins of Jollof Rice</h2>
       <p>The dish originated from the Wolof people of Senegal and Gambia, with the name "jollof" derived from the Wolof ethnic group. Over centuries, it spread across West Africa, with each country developing its own unique version.</p>
@@ -132,7 +132,7 @@ export const blogPosts: BlogPost[] = [
       
       <h2>Working with a Local Team</h2>
       <p>We wanted to work with people who live where we live and understand what it is like to run a busy kitchen. That is how we connected with <strong><a href="https://vortio.ca/" target="_blank" rel="noopener noreferrer">Vortio</a></strong>, a Guelph-based digital consultancy that helps small businesses with practical websites and light automation.</p>
-      <p>What stood out right away was how much they genuinely care about helping local businesses grow. And honestly, the best part? They did it all for free. No fees, no surprise costs—just real help.</p>
+      <p>What stood out right away was how much they genuinely care about helping local businesses grow. And honestly, the best part? They did it all for free. No fees, no surprise costs, just real help.</p>
       <p>Our brief to them was very simple: <em>"Make it easy for people to find us, see what we serve, and place an order without getting lost."</em></p>
       
       <h2>What Changed on the New Site</h2>
