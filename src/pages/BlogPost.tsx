@@ -12,7 +12,6 @@ const categoryColors = {
   culture: "bg-brand-green/10 text-brand-green",
   recipes: "bg-brand-orange/10 text-brand-orange",
   news: "bg-blue-500/10 text-blue-600",
-  community: "bg-purple-500/10 text-purple-600",
 };
 
 const categoryLabels = {
@@ -20,7 +19,6 @@ const categoryLabels = {
   culture: "Food & Culture",
   recipes: "Recipes",
   news: "News",
-  community: "Community",
 };
 
 const BlogPost = () => {
@@ -166,14 +164,10 @@ const BlogPost = () => {
           <div
             className="prose prose-lg dark:prose-invert max-w-none mb-12
               prose-headings:font-display prose-headings:font-bold
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-6
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4
-              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6
-              prose-ul:my-6 prose-ul:space-y-2
-              prose-li:text-muted-foreground prose-li:leading-relaxed
+              prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+              prose-p:text-muted-foreground prose-p:leading-relaxed
               prose-a:text-brand-orange prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-foreground
-              prose-em:text-foreground/80"
+              prose-strong:text-foreground"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
