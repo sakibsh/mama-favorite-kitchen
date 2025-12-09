@@ -9,19 +9,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
-import { ArrowLeft, Clock, CreditCard, Loader2, AlertTriangle, Phone, Banknote } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, Loader2, AlertTriangle, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, subtotal, tax, total, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "pickup">("stripe");
+  
 
   const [formData, setFormData] = useState({
     name: "",
@@ -45,56 +45,6 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePayAtPickup = async () => {
-    const orderNumber = `MFK-${Date.now().toString(36).toUpperCase()}`;
-
-    try {
-      // Insert order directly into database
-      const { data: order, error } = await supabase
-        .from("orders")
-        .insert([{
-          order_number: orderNumber,
-          customer_name: formData.name,
-          customer_email: formData.email,
-          customer_phone: formData.phone,
-          pickup_time: formData.pickupTime,
-          special_instructions: formData.specialInstructions,
-          items: JSON.parse(JSON.stringify(items)),
-          subtotal,
-          tax,
-          total,
-          status: "pending",
-          acknowledged: false,
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Trigger email/SMS notifications
-      await supabase.functions.invoke("send-order-emails", {
-        body: {
-          orderNumber,
-          customerName: formData.name,
-          customerEmail: formData.email,
-          customerPhone: formData.phone,
-          pickupTime: formData.pickupTime,
-          specialInstructions: formData.specialInstructions,
-          items,
-          subtotal,
-          tax,
-          total,
-        },
-      });
-
-      clearCart();
-      toast.success("Order placed successfully!");
-      navigate(`/payment-success?order=${orderNumber}&test=true`);
-    } catch (error) {
-      console.error("Order error:", error);
-      throw error;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,11 +62,6 @@ export default function Checkout() {
     setIsProcessing(true);
 
     try {
-      if (paymentMethod === "pickup") {
-        await handlePayAtPickup();
-        setIsProcessing(false);
-        return;
-      }
 
       // Create Stripe Checkout session
       const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
@@ -299,36 +244,6 @@ export default function Checkout() {
                     />
                   </div>
 
-                  {/* Payment Method Selection */}
-                  <div className="pt-4 border-t space-y-4">
-                    <Label>Payment Method</Label>
-                    <RadioGroup
-                      value={paymentMethod}
-                      onValueChange={(v) => setPaymentMethod(v as "stripe" | "pickup")}
-                      className="space-y-3"
-                    >
-                      <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
-                        <RadioGroupItem value="stripe" id="stripe" />
-                        <Label htmlFor="stripe" className="flex items-center gap-2 cursor-pointer flex-1">
-                          <CreditCard className="h-4 w-4 text-brand-orange" />
-                          <div>
-                            <p className="font-medium">Pay Now (Credit Card)</p>
-                            <p className="text-xs text-muted-foreground">Secure payment via Stripe</p>
-                          </div>
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors">
-                        <RadioGroupItem value="pickup" id="pickup" />
-                        <Label htmlFor="pickup" className="flex items-center gap-2 cursor-pointer flex-1">
-                          <Banknote className="h-4 w-4 text-yellow-600" />
-                          <div>
-                            <p className="font-medium">Pay at Pickup (Cash/Card)</p>
-                            <p className="text-xs text-yellow-600 font-semibold">⚠️ TEST MODE - Remove before launch</p>
-                          </div>
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
 
                   <Button
                     type="submit"
@@ -339,10 +254,8 @@ export default function Checkout() {
                     {isProcessing ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        {paymentMethod === "pickup" ? "Placing Order..." : "Redirecting to Payment..."}
+                        Redirecting to Payment...
                       </>
-                    ) : paymentMethod === "pickup" ? (
-                      `Place Order • $${total.toFixed(2)}`
                     ) : (
                       `Pay Now • $${total.toFixed(2)}`
                     )}
