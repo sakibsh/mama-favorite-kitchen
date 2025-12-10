@@ -156,15 +156,15 @@ const Menu = () => {
     },
     {
       title: "Catering Platters & Party Trays",
-      description: "Perfect for events, parties, and gatherings - Call (519) 824-5741 to order",
+      description: "Perfect for events, parties, and gatherings",
       orderable: false, // Catering requires phone call
       items: [
-        { name: "Full Tray of Jerk Chicken", price: "$150.00", description: "Serves a crowd", badge: "Popular" },
-        { name: "1 Pan of Jollof Rice", price: "$120.00", description: "Authentic West African rice" },
-        { name: "1 Pan of Rice and Peas", price: "$150.00", description: "Traditional Caribbean side" },
-        { name: "1/2 Pan Assorted Meat", price: "$150.00", description: "Mix of our best meats" },
-        { name: "Stew", price: "$50.00", description: "2 liters" },
-        { name: "Goat Pepper Soup", price: "$25.00", description: "30 Oz", badge: "Chef's Choice" },
+        { name: "Full Tray of Jerk Chicken", price: "Call for price", description: "Serves a crowd", badge: "Popular" },
+        { name: "Jollof Rice Pans", price: "Call for price", description: "Authentic West African rice" },
+        { name: "Rice and Peas Pans", price: "Call for price", description: "Traditional Caribbean side" },
+        { name: "Assorted Meat Trays", price: "Call for price", description: "Mix of our best meats" },
+        { name: "Stew (Various Sizes)", price: "Call for price", description: "Available in multiple portions" },
+        { name: "Goat Pepper Soup", price: "Call for price", description: "Available in multiple portions", badge: "Chef's Choice" },
       ],
     },
   ];

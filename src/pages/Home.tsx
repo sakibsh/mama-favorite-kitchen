@@ -518,7 +518,10 @@ const Home = () => {
                   </p>
                   <div className="bg-muted p-6 rounded-xl mb-8 border border-border">
                     <p className="font-semibold text-foreground">
-                      Catering platters & party trays starting from just $25!
+                      Custom packages tailored to your event size and preferences
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Call (519) 824-5741 for a personalized quote
                     </p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
