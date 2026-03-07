@@ -41,6 +41,16 @@ const Menu = () => {
 
   const menuSections = [
     {
+      title: "🔥 Jerk Chicken Cuts",
+      subtitle: "NEW — Whole or Half Cuts of our Signature Jerk Chicken",
+      orderable: true,
+      isFeatured: true,
+      items: [
+        { name: "Half Jerk Chicken", price: "$17.50", description: "Generous half cut, seasoned & grilled to perfection", badge: "New" },
+        { name: "Whole Jerk Chicken", price: "$29.95", description: "Full bird, marinated in our signature jerk spice blend", badge: "New" },
+      ],
+    },
+    {
       title: "Lunch Special",
       subtitle: lunchAvailable 
         ? "Available Mon-Fri until 2:30 PM" 
