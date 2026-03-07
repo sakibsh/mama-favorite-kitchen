@@ -133,6 +133,11 @@ const Home = () => {
       name: "Fufu & Egusi Soup",
       description: "Traditional Nigerian pounded yam with rich egusi soup",
     },
+    {
+      image: jerkWhole,
+      name: "Whole Jerk Chicken",
+      description: "Whole or half cuts of our signature jerk chicken — perfectly seasoned & grilled",
+    },
   ];
 
   const testimonials = [
