@@ -8,6 +8,7 @@ import jerkChicken from "@/assets/gallery/jerk-chicken.webp";
 import jollofRice from "@/assets/gallery/jollof-rice.webp";
 import curryGoat from "@/assets/gallery/curry-goat.webp";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
+import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -131,6 +132,11 @@ const Home = () => {
       image: fufuEgusi,
       name: "Fufu & Egusi Soup",
       description: "Traditional Nigerian pounded yam with rich egusi soup",
+    },
+    {
+      image: jerkWhole,
+      name: "Whole Jerk Chicken",
+      description: "Whole or half cuts of our signature jerk chicken — perfectly seasoned & grilled",
     },
   ];
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -10,6 +10,8 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
+import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
+import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -38,6 +40,16 @@ const Menu = () => {
   }, []);
 
   const menuSections = [
+    {
+      title: "🔥 Jerk Chicken Cuts",
+      subtitle: "NEW — Whole or Half Cuts of our Signature Jerk Chicken",
+      orderable: true,
+      isFeatured: true,
+      items: [
+        { name: "Half Jerk Chicken", price: "$17.50", description: "Generous half cut, seasoned & grilled to perfection", badge: "New" },
+        { name: "Whole Jerk Chicken", price: "$29.95", description: "Full bird, marinated in our signature jerk spice blend", badge: "New" },
+      ],
+    },
     {
       title: "Lunch Special",
       subtitle: lunchAvailable 
@@ -252,6 +264,23 @@ const Menu = () => {
                 description={section.description}
                 className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-xl"
               >
+                {/* Featured Jerk Chicken Cuts images */}
+                {section.isFeatured && (
+                  <div className="mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
+                        <img src={jerkWhole} alt="Whole Jerk Chicken" className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
+                        <img src={jerkGrill} alt="Jerk Chicken on the grill" className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-brand-orange/10 text-brand-orange">
+                      <Flame className="h-4 w-4" />
+                      <span className="text-sm font-bold">{section.subtitle}</span>
+                    </div>
+                  </div>
+                )}
                 {/* Lunch special availability notice */}
                 {section.isLunchSpecial && (
                   <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
