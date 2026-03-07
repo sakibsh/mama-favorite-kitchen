@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -10,6 +10,8 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
+import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
+import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
