@@ -264,6 +264,23 @@ const Menu = () => {
                 description={section.description}
                 className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-xl"
               >
+                {/* Featured Jerk Chicken Cuts images */}
+                {section.isFeatured && (
+                  <div className="mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
+                        <img src={jerkWhole} alt="Whole Jerk Chicken" className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
+                        <img src={jerkGrill} alt="Jerk Chicken on the grill" className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-brand-orange/10 text-brand-orange">
+                      <Flame className="h-4 w-4" />
+                      <span className="text-sm font-bold">{section.subtitle}</span>
+                    </div>
+                  </div>
+                )}
                 {/* Lunch special availability notice */}
                 {section.isLunchSpecial && (
                   <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
