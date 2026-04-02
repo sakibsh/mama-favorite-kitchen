@@ -58,7 +58,7 @@ const Menu = () => {
       orderable: true,
       isLunchSpecial: true,
       items: [
-        { name: "Jerk Chicken, Rice & Peas", price: "$8.25", description: "Perfectly seasoned grilled chicken", badge: "Popular" },
+        { name: "Jerk Chicken, Rice & Peas", price: "$10.99", description: "Includes chicken, rice & peas or jollof rice & water or pop", badge: "Popular" },
         { name: "Doubles", price: "$4.40", description: "Curried chickpea flatbread" },
         { name: "Doubles: Make it Exclusive add Any Meat", price: "$12.65" },
       ],
