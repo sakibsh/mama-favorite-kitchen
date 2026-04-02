@@ -118,7 +118,7 @@ const Menu = () => {
         { name: "Large Pie", price: "$6.60" },
         { name: "Rice", price: "$4.95" },
         { name: "Curry Chicken", price: "$10.99" },
-        { name: "Jerk Chicken", price: "$8.25" },
+        { name: "Jerk Chicken", price: "$8.80" },
         { name: "(Festival)Fried dumplings", price: "$4.95" },
         { name: "Fried Plantain", price: "$4.95", badge: "Popular" },
         { name: "Plantain fries", price: "$5.50" },
