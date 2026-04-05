@@ -25,8 +25,8 @@ export function useOrderAlerts(
   const [unacknowledgedOrders, setUnacknowledgedOrders] = useState<Order[]>([]);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const playTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const playTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousOrderCountRef = useRef<number>(0);
 
   // Filter unacknowledged orders from props
