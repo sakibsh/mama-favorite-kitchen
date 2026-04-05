@@ -46,7 +46,7 @@ const Menu = () => {
       orderable: true,
       isFeatured: true,
       items: [
-        { name: "Half Jerk Chicken", price: "$17.50", description: "Generous half cut, seasoned & grilled to perfection", badge: "New" },
+        { name: "Half Jerk Chicken", price: "$17.99", description: "Per piece, served with coleslaw salad", badge: "New" },
         { name: "Whole Jerk Chicken", price: "$29.95", description: "Full bird, marinated in our signature jerk spice blend", badge: "New" },
       ],
     },
