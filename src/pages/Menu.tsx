@@ -171,7 +171,13 @@ const Menu = () => {
       description: "Perfect for events, parties, and gatherings",
       orderable: false, // Catering requires phone call
       items: [
-        { name: "Full Tray of Jerk Chicken", price: "Call for price", description: "Serves a crowd", badge: "Popular" },
+        { name: "LG Tray of Jerk Chicken", price: "$160.00", description: "Feeds 20 people", badge: "Popular" },
+        { name: "LG Tray of Rice (Any Kind)", price: "$140.00", description: "Feeds 20 people" },
+        { name: "Half Tray of Curry Chicken", price: "$149.99", description: "Feeds 10 people" },
+        { name: "Half Tray of Curry Goat", price: "$185.00", description: "Feeds 10 people" },
+        { name: "Curry Goat (Full)", price: "$249.99", description: "Serves 10 people" },
+        { name: "Oxtail (Full)", price: "$249.99", description: "Feeds 10 people" },
+        { name: "Full Tray of Jerk Chicken", price: "Call for price", description: "Serves a crowd" },
         { name: "Jollof Rice Pans", price: "Call for price", description: "Authentic West African rice" },
         { name: "Rice and Peas Pans", price: "Call for price", description: "Traditional Caribbean side" },
         { name: "Assorted Meat Trays", price: "Call for price", description: "Mix of our best meats" },
