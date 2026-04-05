@@ -46,7 +46,7 @@ const Menu = () => {
       orderable: true,
       isFeatured: true,
       items: [
-        { name: "Half Jerk Chicken", price: "$17.50", description: "Generous half cut, seasoned & grilled to perfection", badge: "New" },
+        { name: "Half Jerk Chicken", price: "$17.99", description: "Per piece, served with coleslaw salad", badge: "New" },
         { name: "Whole Jerk Chicken", price: "$29.95", description: "Full bird, marinated in our signature jerk spice blend", badge: "New" },
       ],
     },
@@ -82,7 +82,7 @@ const Menu = () => {
         { name: "Jerk Chicken Dinner", price: "$20.35", badge: "Popular" },
         { name: "Curry Chicken Dinner", price: "$20.35" },
         { name: "Pounded Yam (Fufu)", price: "$20.35", description: "Served with any soup" },
-        { name: "Fish Dinner", price: "$27.49" },
+        { name: "Fish Dinner", price: "$24.99", description: "Crocker fish / Wild fish" },
         { name: "Pasta Dinner", price: "$20.35", description: "With meat, fish or veggies" },
         { name: "Shrimp Dinner", price: "$20.35" },
         { name: "Yam Porridge Dinner", price: "$20.35" },
