@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame, Ban } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOperatingHours } from "@/hooks/useOperatingHours";
+import { useMenuAvailability } from "@/hooks/useMenuAvailability";
 import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
 import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
@@ -29,6 +30,7 @@ const Menu = () => {
   const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
   const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
+  const { isItemAvailable, isLoading: availabilityLoading } = useMenuAvailability();
 
   // Combined check: ordering is available only if pickup is enabled AND restaurant is open
   const orderingAvailable = pickupEnabled && restaurantOpen;
@@ -315,16 +317,26 @@ const Menu = () => {
                   {section.items.map((item, itemIndex) => {
                     const itemId = generateId(item.name, section.title);
                     const quantity = getItemQuantity(itemId);
+                    const available = isItemAvailable(item.name);
                     
                     return (
                     <div
                       key={itemIndex}
-                        className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border border-transparent hover:border-brand-orange/20 hover:bg-muted/50 transition-all"
+                        className={`flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border border-transparent transition-all ${
+                          available 
+                            ? "hover:border-brand-orange/20 hover:bg-muted/50" 
+                            : "opacity-50"
+                        }`}
                     >
                         <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-bold text-lg text-foreground">{item.name}</h3>
-                          {item.badge && (
+                            <h3 className={`font-bold text-lg ${available ? "text-foreground" : "text-muted-foreground line-through"}`}>{item.name}</h3>
+                          {!available && (
+                            <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
+                              Unavailable
+                            </Badge>
+                          )}
+                          {available && item.badge && (
                             <Badge
                               variant={
                                 item.badge === "Vegetarian" || item.badge === "Vegetarian Option"
@@ -349,11 +361,20 @@ const Menu = () => {
                       </div>
                         
                         <div className="flex items-center gap-4">
-                          <span className="font-bold text-brand-orange text-xl whitespace-nowrap">
+                          <span className={`font-bold text-xl whitespace-nowrap ${available ? "text-brand-orange" : "text-muted-foreground"}`}>
                         {item.price}
                       </span>
                           
-                          {section.orderable ? (
+                          {!available ? (
+                            <Button
+                              size="sm"
+                              disabled
+                              className="bg-muted text-muted-foreground cursor-not-allowed"
+                            >
+                              <Ban className="h-4 w-4 mr-1" />
+                              Sold Out
+                            </Button>
+                          ) : section.orderable ? (
                             // Check if ordering is unavailable
                             !orderingAvailable ? (
                               <Button
