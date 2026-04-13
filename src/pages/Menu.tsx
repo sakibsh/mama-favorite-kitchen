@@ -30,6 +30,7 @@ const Menu = () => {
   const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
   const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
+  const { isItemAvailable, isLoading: availabilityLoading } = useMenuAvailability();
 
   // Combined check: ordering is available only if pickup is enabled AND restaurant is open
   const orderingAvailable = pickupEnabled && restaurantOpen;
