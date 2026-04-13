@@ -207,8 +207,8 @@ const Menu = () => {
   return (
     <div className="min-h-screen pt-32 pb-16 overflow-x-hidden">
       <div className="container mx-auto px-4 relative z-10">
-        {/* Pickup Closed Banner */}
-        {!pickupLoading && !pickupEnabled && (
+        {/* Closed Banner */}
+        {!isLoadingStatus && !orderingAvailable && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -216,12 +216,19 @@ const Menu = () => {
           >
             <div className="flex items-center justify-center gap-3 mb-2">
               <AlertTriangle className="h-6 w-6 text-red-500" />
-              <h2 className="text-xl font-bold text-red-600 dark:text-red-400">Online Ordering Temporarily Closed</h2>
+              <h2 className="text-xl font-bold text-red-600 dark:text-red-400">
+                {!pickupEnabled ? "Online Ordering Temporarily Closed" : `We're Currently Closed`}
+              </h2>
             </div>
             <p className="text-muted-foreground">
-              We're not accepting online pickup orders right now. Please call us at{" "}
-              <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>{" "}
-              to place your order.
+              {!pickupEnabled ? (
+                <>We're not accepting online pickup orders right now. Please call us at{" "}
+                <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>{" "}
+                to place your order.</>
+              ) : (
+                <>We'll be back {nextOpenTime}. You can still browse the menu or call us at{" "}
+                <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>.</>
+              )}
             </p>
           </motion.div>
         )}
