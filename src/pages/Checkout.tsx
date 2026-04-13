@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
+import { useOperatingHours } from "@/hooks/useOperatingHours";
 
 
 export default function Checkout() {
@@ -21,7 +22,10 @@ export default function Checkout() {
   const { items, subtotal, tax, total, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
-  
+  const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
+
+  const orderingAvailable = pickupEnabled && restaurantOpen;
+  const isLoadingStatus = pickupLoading || hoursLoading;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -96,7 +100,7 @@ export default function Checkout() {
   };
 
   // Show message if pickup is closed
-  if (!pickupLoading && !pickupEnabled) {
+  if (!isLoadingStatus && !orderingAvailable) {
     return (
       <div className="min-h-screen pt-32 pb-16">
         <div className="container mx-auto px-4 max-w-2xl text-center">
@@ -107,10 +111,13 @@ export default function Checkout() {
           >
             <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
             <h1 className="text-3xl font-display font-bold text-foreground mb-4">
-              Online Ordering Temporarily Closed
+              {!pickupEnabled ? "Online Ordering Temporarily Closed" : "We're Currently Closed"}
             </h1>
             <p className="text-muted-foreground mb-8">
-              We're not accepting online pickup orders right now. Please call us to place your order.
+              {!pickupEnabled 
+                ? "We're not accepting online pickup orders right now. Please call us to place your order."
+                : `We'll be back ${nextOpenTime}. Please call us to place your order.`
+              }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-brand-green hover:bg-brand-green/90">

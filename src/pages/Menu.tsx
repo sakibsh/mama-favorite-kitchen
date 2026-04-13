@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
+import { useOperatingHours } from "@/hooks/useOperatingHours";
 import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
 import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
@@ -27,6 +28,11 @@ const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
   const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
+  const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
+
+  // Combined check: ordering is available only if pickup is enabled AND restaurant is open
+  const orderingAvailable = pickupEnabled && restaurantOpen;
+  const isLoadingStatus = pickupLoading || hoursLoading;
 
   // Check lunch special availability periodically
   useEffect(() => {
@@ -201,8 +207,8 @@ const Menu = () => {
   return (
     <div className="min-h-screen pt-32 pb-16 overflow-x-hidden">
       <div className="container mx-auto px-4 relative z-10">
-        {/* Pickup Closed Banner */}
-        {!pickupLoading && !pickupEnabled && (
+        {/* Closed Banner */}
+        {!isLoadingStatus && !orderingAvailable && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,12 +216,19 @@ const Menu = () => {
           >
             <div className="flex items-center justify-center gap-3 mb-2">
               <AlertTriangle className="h-6 w-6 text-red-500" />
-              <h2 className="text-xl font-bold text-red-600 dark:text-red-400">Online Ordering Temporarily Closed</h2>
+              <h2 className="text-xl font-bold text-red-600 dark:text-red-400">
+                {!pickupEnabled ? "Online Ordering Temporarily Closed" : `We're Currently Closed`}
+              </h2>
             </div>
             <p className="text-muted-foreground">
-              We're not accepting online pickup orders right now. Please call us at{" "}
-              <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>{" "}
-              to place your order.
+              {!pickupEnabled ? (
+                <>We're not accepting online pickup orders right now. Please call us at{" "}
+                <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>{" "}
+                to place your order.</>
+              ) : (
+                <>We'll be back {nextOpenTime}. You can still browse the menu or call us at{" "}
+                <a href="tel:5198245741" className="font-bold text-brand-orange hover:underline">(519) 824-5741</a>.</>
+              )}
             </p>
           </motion.div>
         )}
@@ -231,15 +244,15 @@ const Menu = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className={`border-2 rounded-2xl p-6 max-w-2xl mx-auto backdrop-blur-sm ${
-              pickupEnabled 
+              orderingAvailable 
                 ? "bg-brand-green/10 border-brand-green/20" 
                 : "bg-muted border-border"
             }`}
           >
             <p className={`font-bold text-lg flex items-center justify-center gap-2 ${
-              pickupEnabled ? "text-brand-green" : "text-muted-foreground"
+              orderingAvailable ? "text-brand-green" : "text-muted-foreground"
             }`}>
-              {pickupEnabled ? (
+              {orderingAvailable ? (
                 <>
                   <ShoppingCart className="h-5 w-5" />
                   Order online for pickup! Add items to your cart below.
@@ -341,8 +354,8 @@ const Menu = () => {
                       </span>
                           
                           {section.orderable ? (
-                            // Check if pickup is disabled
-                            !pickupEnabled ? (
+                            // Check if ordering is unavailable
+                            !orderingAvailable ? (
                               <Button
                                 size="sm"
                                 variant="outline"

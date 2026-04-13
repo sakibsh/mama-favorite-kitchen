@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOrderAlerts } from "@/hooks/useOrderAlerts";
+import { useOperatingHours } from "@/hooks/useOperatingHours";
 interface Order {
   id: string;
   order_number: string;
@@ -84,7 +85,9 @@ export default function Admin() {
   const [statusFilter, setStatusFilter] = useState("all");
   const { pickupEnabled, togglePickup } = usePickupSettings();
   const [isTogglingPickup, setIsTogglingPickup] = useState(false);
-  
+  const { hours: operatingHours, isOpen: restaurantOpen, isLoading: hoursLoading } = useOperatingHours();
+  const [editingHours, setEditingHours] = useState<Record<string, { open: string; close: string }> | null>(null);
+  const [isSavingHours, setIsSavingHours] = useState(false);
   // Callback for when orders are acknowledged
   const handleOrderAcknowledged = useCallback((orderId: string, acknowledged: boolean) => {
     setOrders(current => 
@@ -463,7 +466,84 @@ export default function Admin() {
           </CardContent>
         </Card>
 
-        {/* Audio Alert Control Card */}
+        {/* Operating Hours Card */}
+        <Card className={`mb-6 border-2 ${restaurantOpen ? "border-green-500/30" : "border-orange-500/30"}`}>
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Clock className="h-5 w-5" />
+              Operating Hours
+              <Badge variant={restaurantOpen ? "default" : "secondary"} className={restaurantOpen ? "bg-green-500" : "bg-orange-500"}>
+                {restaurantOpen ? "Currently Open" : "Currently Closed"}
+              </Badge>
+            </CardTitle>
+            <CardDescription>Online ordering is automatically disabled outside these hours</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {operatingHours && (
+              <div className="space-y-3">
+                {(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const).map((day) => {
+                  const dayHours = editingHours ? editingHours[day] : operatingHours[day];
+                  const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
+                  return (
+                    <div key={day} className="flex items-center gap-3">
+                      <span className="w-24 text-sm font-medium">{dayLabel}</span>
+                      <Input
+                        type="time"
+                        value={dayHours?.open || ""}
+                        className="w-32"
+                        onChange={(e) => {
+                          const updated = { ...(editingHours || operatingHours), [day]: { ...dayHours, open: e.target.value } };
+                          setEditingHours(updated);
+                        }}
+                      />
+                      <span className="text-sm text-muted-foreground">to</span>
+                      <Input
+                        type="time"
+                        value={dayHours?.close || ""}
+                        className="w-32"
+                        onChange={(e) => {
+                          const updated = { ...(editingHours || operatingHours), [day]: { ...dayHours, close: e.target.value } };
+                          setEditingHours(updated);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                {editingHours && (
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      disabled={isSavingHours}
+                      onClick={async () => {
+                        setIsSavingHours(true);
+                        try {
+                          const { error } = await supabase
+                            .from("settings")
+                            .update({ value: editingHours as unknown as import("@/integrations/supabase/types").Json, updated_at: new Date().toISOString() })
+                            .eq("key", "operating_hours");
+                          if (error) throw error;
+                          toast.success("Operating hours updated!");
+                          setEditingHours(null);
+                        } catch (error) {
+                          toast.error("Failed to update hours");
+                          console.error(error);
+                        } finally {
+                          setIsSavingHours(false);
+                        }
+                      }}
+                    >
+                      {isSavingHours ? "Saving..." : "Save Hours"}
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditingHours(null)}>
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <Card className={`mb-6 border-2 ${isAudioEnabled ? "border-blue-500/50 bg-blue-50/50 dark:bg-blue-950/20" : "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20"}`}>
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
