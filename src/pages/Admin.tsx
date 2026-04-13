@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOrderAlerts } from "@/hooks/useOrderAlerts";
+import { useOperatingHours } from "@/hooks/useOperatingHours";
 interface Order {
   id: string;
   order_number: string;
@@ -84,7 +85,9 @@ export default function Admin() {
   const [statusFilter, setStatusFilter] = useState("all");
   const { pickupEnabled, togglePickup } = usePickupSettings();
   const [isTogglingPickup, setIsTogglingPickup] = useState(false);
-  
+  const { hours: operatingHours, isOpen: restaurantOpen, isLoading: hoursLoading } = useOperatingHours();
+  const [editingHours, setEditingHours] = useState<Record<string, { open: string; close: string }> | null>(null);
+  const [isSavingHours, setIsSavingHours] = useState(false);
   // Callback for when orders are acknowledged
   const handleOrderAcknowledged = useCallback((orderId: string, acknowledged: boolean) => {
     setOrders(current => 
