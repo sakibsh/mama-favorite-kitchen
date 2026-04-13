@@ -244,15 +244,15 @@ const Menu = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className={`border-2 rounded-2xl p-6 max-w-2xl mx-auto backdrop-blur-sm ${
-              pickupEnabled 
+              orderingAvailable 
                 ? "bg-brand-green/10 border-brand-green/20" 
                 : "bg-muted border-border"
             }`}
           >
             <p className={`font-bold text-lg flex items-center justify-center gap-2 ${
-              pickupEnabled ? "text-brand-green" : "text-muted-foreground"
+              orderingAvailable ? "text-brand-green" : "text-muted-foreground"
             }`}>
-              {pickupEnabled ? (
+              {orderingAvailable ? (
                 <>
                   <ShoppingCart className="h-5 w-5" />
                   Order online for pickup! Add items to your cart below.
@@ -354,8 +354,8 @@ const Menu = () => {
                       </span>
                           
                           {section.orderable ? (
-                            // Check if pickup is disabled
-                            !pickupEnabled ? (
+                            // Check if ordering is unavailable
+                            !orderingAvailable ? (
                               <Button
                                 size="sm"
                                 variant="outline"
