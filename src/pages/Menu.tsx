@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
+import { useOperatingHours } from "@/hooks/useOperatingHours";
 import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
 import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
@@ -27,6 +28,11 @@ const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
   const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
+  const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
+
+  // Combined check: ordering is available only if pickup is enabled AND restaurant is open
+  const orderingAvailable = pickupEnabled && restaurantOpen;
+  const isLoadingStatus = pickupLoading || hoursLoading;
 
   // Check lunch special availability periodically
   useEffect(() => {
