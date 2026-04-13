@@ -588,9 +588,7 @@ const Home = () => {
                   </div>
                   <div className="space-y-4 pl-16">
                     {[
-                      { day: "Monday", time: "11 AM - 10 PM" },
-                      { day: "Tuesday - Thursday", time: "11 AM - 10 PM" },
-                      { day: "Friday - Saturday", time: "11 AM - 10 PM" },
+                      { day: "Monday - Saturday", time: "11 AM - 8 PM" },
                       { day: "Sunday", time: "1 PM - 8 PM" }
                     ].map((schedule, i) => (
                       <div key={i} className="flex justify-between items-center border-b border-dashed border-border pb-2 last:border-0 last:pb-0">

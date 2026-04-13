@@ -217,16 +217,8 @@ const Contact = () => {
                     <h3 className="font-semibold text-lg mb-2">Hours of Operation</h3>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between gap-4">
-                        <span className="font-medium">Monday:</span>
-                        <span className="text-muted-foreground">11 AM - 10 PM</span>
-                      </div>
-                      <div className="flex justify-between gap-4">
-                        <span className="font-medium">Tue - Thu:</span>
-                        <span className="text-muted-foreground">11 AM - 10 PM</span>
-                      </div>
-                      <div className="flex justify-between gap-4">
-                        <span className="font-medium">Fri - Sat:</span>
-                        <span className="text-muted-foreground">11 AM - 10 PM</span>
+                        <span className="font-medium">Mon - Sat:</span>
+                        <span className="text-muted-foreground">11 AM - 8 PM</span>
                       </div>
                       <div className="flex justify-between gap-4">
                         <span className="font-medium">Sunday:</span>
