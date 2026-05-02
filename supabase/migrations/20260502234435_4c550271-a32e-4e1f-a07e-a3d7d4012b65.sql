@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS menu_items_name_lower_idx ON public.menu_items (lower(name));
