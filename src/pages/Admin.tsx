@@ -42,37 +42,6 @@ interface MenuItem {
   is_available: boolean;
 }
 
-// Menu items from the menu page for managing availability
-const defaultMenuItems = [
-  { id: "jerk-chicken-lunch", name: "Jerk Chicken, Rice & Peas (Lunch)", price: 7.50, category: "Lunch Special" },
-  { id: "doubles", name: "Doubles", price: 4.00, category: "Lunch Special" },
-  { id: "doubles-exclusive", name: "Doubles: Make it Exclusive", price: 11.50, category: "Lunch Special" },
-  { id: "curry-chicken-roti", name: "Curry Chicken Roti", price: 14.99, category: "ROTI WRAPS" },
-  { id: "vegetarian-roti", name: "Vegetarian ROTI", price: 14.99, category: "ROTI WRAPS" },
-  { id: "oxtail-dinner", name: "Oxtail Dinner", price: 22.50, category: "Dinner" },
-  { id: "curry-goat-dinner", name: "Curry Goat Dinner", price: 22.50, category: "Dinner" },
-  { id: "suya-dinner", name: "Suya Dinner", price: 22.50, category: "Dinner" },
-  { id: "jerk-chicken-dinner", name: "Jerk Chicken Dinner", price: 18.50, category: "Dinner" },
-  { id: "curry-chicken-dinner", name: "Curry Chicken Dinner", price: 18.50, category: "Dinner" },
-  { id: "fufu-dinner", name: "Pounded Yam (Fufu)", price: 18.50, category: "Dinner" },
-  { id: "fish-dinner", name: "Fish Dinner", price: 24.99, category: "Dinner" },
-  { id: "pasta-dinner", name: "Pasta Dinner", price: 18.50, category: "Dinner" },
-  { id: "shrimp-dinner", name: "Shrimp Dinner", price: 18.50, category: "Dinner" },
-  { id: "yam-porridge-dinner", name: "Yam Porridge Dinner", price: 18.50, category: "Dinner" },
-  { id: "roti-dinner", name: "ROTI Dinner", price: 18.50, category: "Dinner" },
-  { id: "plantain-poutine-meat", name: "Plantain Poutine with Any Meat", price: 18.50, category: "Dinner" },
-  { id: "egusi-soup", name: "Egusi Soup", price: 7.99, category: "Soups" },
-  { id: "chicken-curry-soup", name: "Chicken Curry", price: 7.99, category: "Soups" },
-  { id: "okro-soup", name: "Okro Soup", price: 7.99, category: "Soups" },
-  { id: "vegetable-soup", name: "Vegetable Soup", price: 7.99, category: "Soups" },
-  { id: "goat-pepper-soup", name: "Goat Pepper Soup", price: 24.99, category: "Soups" },
-  { id: "fried-plantain", name: "Fried Plantain", price: 4.50, category: "Side Orders" },
-  { id: "plantain-fries", name: "Plantain fries", price: 5.00, category: "Side Orders" },
-  { id: "rice-side", name: "Rice", price: 4.50, category: "Side Orders" },
-  { id: "jerk-chicken-side", name: "Jerk Chicken (Side)", price: 7.50, category: "Side Orders" },
-  { id: "curry-chicken-side", name: "Curry Chicken (Side)", price: 9.99, category: "Side Orders" },
-];
-
 export default function Admin() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -208,24 +177,12 @@ export default function Admin() {
         .select("*")
         .order("category");
 
-      if (error) {
-        // Table might not exist, use defaults
-        if (error.code === "42P01") {
-          setMenuItems(defaultMenuItems.map(item => ({ ...item, is_available: true })));
-          return;
-        }
-        throw error;
-      }
-
-      if (data && data.length > 0) {
-        setMenuItems(data);
-      } else {
-        // No data, use defaults
-        setMenuItems(defaultMenuItems.map(item => ({ ...item, is_available: true })));
-      }
+      if (error) throw error;
+      setMenuItems(data || []);
     } catch (error) {
       console.error("Error loading menu items:", error);
-      setMenuItems(defaultMenuItems.map(item => ({ ...item, is_available: true })));
+      toast.error("Failed to load menu items");
+      setMenuItems([]);
     }
   };
 
