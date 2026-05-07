@@ -67,6 +67,7 @@ const Menu = () => {
       isLunchSpecial: true,
       items: [
         { name: "Jerk Chicken, Rice & Peas", price: "$10.99", description: "Includes chicken, rice & peas or jollof rice & water or pop", badge: "Popular" },
+        { name: "Curry Chicken (Lunch)", price: "$18.50", description: "Lunch portion size" },
         { name: "Doubles", price: "$4.40", description: "Curried chickpea flatbread" },
         { name: "Doubles: Make it Exclusive add Any Meat", price: "$12.65" },
       ],
@@ -89,7 +90,6 @@ const Menu = () => {
         { name: "Suya Dinner (grilled beef tenderloin)", price: "$24.75" },
         { name: "Jerk Chicken Dinner", price: "$20.35", badge: "Popular" },
         { name: "Curry Chicken Dinner", price: "$22.50" },
-        { name: "Curry Chicken (Lunch)", price: "$18.50", description: "Lunch portion size" },
         { name: "Pounded Yam (Fufu)", price: "$20.35", description: "Served with any soup" },
         { name: "Fish Dinner", price: "$24.99", description: "Crocker fish / Wild fish", badge: "New" },
         { name: "Pasta Dinner", price: "$20.35", description: "With meat, fish or veggies" },
