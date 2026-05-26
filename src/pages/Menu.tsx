@@ -105,7 +105,7 @@ const Menu = () => {
       items: [
         { name: "Coleslaw (Small)", price: "$5.49" },
         { name: "Coleslaw (Large)", price: "$6.59" },
-        { name: "Mixed Greens Salad", price: "$5.99" },
+        { name: "Mixed Greens Salad", price: "$5.99", badge: "New" },
       ],
     },
     {
