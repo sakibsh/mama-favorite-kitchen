@@ -161,7 +161,7 @@ const Menu = () => {
       orderable: true,
       items: [
         { name: "Assorted", price: "$5.49" },
-        { name: "Fruit Container", price: "$5.99" },
+        { name: "Fruit Container", price: "$5.99", badge: "New" },
       ],
     },
     {
