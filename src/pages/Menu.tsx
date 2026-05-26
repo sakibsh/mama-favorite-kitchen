@@ -137,6 +137,7 @@ const Menu = () => {
         { name: "Assorted Meat", price: "$27.49" },
         { name: "Plantain Poutine", price: "$16.49" },
         { name: "Fufu (1 wrap)", price: "$6.59" },
+        { name: "Jamaican Patty", price: "$3.50" },
       ],
     },
     {
