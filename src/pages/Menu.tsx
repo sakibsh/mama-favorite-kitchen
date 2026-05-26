@@ -105,7 +105,7 @@ const Menu = () => {
       items: [
         { name: "Coleslaw (Small)", price: "$5.49" },
         { name: "Coleslaw (Large)", price: "$6.59" },
-        { name: "Mixed Greens Salad", price: "$5.99" },
+        { name: "Mixed Greens Salad", price: "$5.99", badge: "New" },
       ],
     },
     {
@@ -137,7 +137,7 @@ const Menu = () => {
         { name: "Assorted Meat", price: "$27.49" },
         { name: "Plantain Poutine", price: "$16.49" },
         { name: "Fufu (1 wrap)", price: "$6.59" },
-        { name: "Jamaican Patty", price: "$3.50" },
+        { name: "Jamaican Patty", price: "$3.50", badge: "New" },
       ],
     },
     {
@@ -161,7 +161,7 @@ const Menu = () => {
       orderable: true,
       items: [
         { name: "Assorted", price: "$5.49" },
-        { name: "Fruit Container", price: "$5.99" },
+        { name: "Fruit Container", price: "$5.99", badge: "New" },
       ],
     },
     {
