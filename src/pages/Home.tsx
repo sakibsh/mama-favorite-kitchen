@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, MapPin, Clock, Star, ArrowRight, Quote } from "lucide-react";
+import { Phone, MapPin, Clock, Star, ArrowRight, Quote, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -251,6 +251,17 @@ const Home = () => {
                 </Button>
               </motion.div>
             </div>
+
+            {/* Dine-in announcement */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-green/20 border border-brand-green/40 backdrop-blur-sm"
+            >
+              <UtensilsCrossed className="h-4 w-4 text-brand-green" />
+              <span className="text-sm font-semibold text-brand-green">Dine-in now available!</span>
+            </motion.div>
           </motion.div>
         </div>
 
