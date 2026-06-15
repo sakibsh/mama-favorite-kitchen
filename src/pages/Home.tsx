@@ -257,10 +257,10 @@ const Home = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-green/20 border border-brand-green/40 backdrop-blur-sm"
+              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-gold shadow-lg"
             >
-              <UtensilsCrossed className="h-4 w-4 text-brand-green" />
-              <span className="text-sm font-semibold text-brand-green">Dine-in now available!</span>
+              <UtensilsCrossed className="h-5 w-5 text-brand-green" />
+              <span className="text-base font-bold text-brand-green">Dine-in now available!</span>
             </motion.div>
           </motion.div>
         </div>
