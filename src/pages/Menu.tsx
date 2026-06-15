@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame, Ban } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame, Ban, UtensilsCrossed } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
