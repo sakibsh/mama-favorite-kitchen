@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, MapPin, Clock, Star, ArrowRight, Quote } from "lucide-react";
+import { Phone, MapPin, Clock, Star, ArrowRight, Quote, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
