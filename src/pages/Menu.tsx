@@ -272,6 +272,17 @@ const Menu = () => {
               )}
             </p>
           </motion.div>
+
+          {/* Dine-in notice */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-green"
+          >
+            <UtensilsCrossed className="h-4 w-4" />
+            <span>Dine-in now available — come eat with us!</span>
+          </motion.div>
         </div>
 
         {/* Menu Sections */}
