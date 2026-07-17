@@ -311,8 +311,9 @@ const Menu = () => {
                                 className={`text-xs ${
                                   item.badge === "Popular" ? "bg-brand-orange hover:bg-brand-orange/90" : 
                                   item.badge === "Chef's Choice" ? "bg-brand-gold hover:bg-brand-gold/90 text-black" :
-                                  item.badge === "Vegetarian" || item.badge === "Vegetarian Option" ? "bg-brand-green hover:bg-brand-green/90" :
+                                  item.badge === "Vegetarian" || item.badge === "Vegetarian Option" || item.badge === "Vegan" ? "bg-brand-green hover:bg-brand-green/90" :
                                   item.badge === "Spicy" ? "bg-red-500 hover:bg-red-500/90" :
+                                  item.badge === "Halal" ? "bg-brand-green hover:bg-brand-green/90 text-white" :
                                   item.badge === "Fresh" ? "bg-green-500 hover:bg-green-500/90" : ""
                                 }`}
                             >
