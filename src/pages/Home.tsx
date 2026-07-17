@@ -252,16 +252,27 @@ const Home = () => {
               </motion.div>
             </div>
 
-            {/* Dine-in announcement */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-gold shadow-lg"
-            >
-              <UtensilsCrossed className="h-5 w-5 text-brand-green" />
-              <span className="text-base font-bold text-brand-green">Dine-in now available!</span>
-            </motion.div>
+            {/* Dine-in + Halal announcements */}
+            <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-gold shadow-lg"
+              >
+                <UtensilsCrossed className="h-5 w-5 text-brand-green" />
+                <span className="text-base font-bold text-brand-green">Dine-in now available!</span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-green shadow-lg"
+              >
+                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-white text-brand-green font-black text-xs">✓</span>
+                <span className="text-base font-bold text-white">All meats available Halal</span>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
 
@@ -559,8 +570,91 @@ const Home = () => {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="py-24 bg-muted/30 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <ShaderText as="h2" text="Frequently Asked" className="text-4xl md:text-6xl" />
+              <p className="text-lg text-muted-foreground mt-4">Everything you need to know before you visit or order.</p>
+            </div>
+            <div className="space-y-4">
+              {[
+                {
+                  q: "Are your meats halal?",
+                  a: "Yes. All our meats — chicken, beef, goat, lamb, and assorted meats used in our stews, wraps, soups, and catering trays — are available halal. Just let us know when you order in-store, by phone, or in your online pickup notes."
+                },
+                {
+                  q: "Do you offer dine-in?",
+                  a: "Yes! Dine-in is now available at our 45 Cork St E, Guelph location. You can also order online for pickup, or call us for large catering orders."
+                },
+                {
+                  q: "What are your hours?",
+                  a: "Monday to Saturday: 11 AM – 8 PM. Sunday: 1 PM – 8 PM. Online pickup ordering syncs automatically with our store hours."
+                },
+                {
+                  q: "Do you cater events?",
+                  a: "Yes, we offer catering platters and party trays for events of all sizes — from half trays that feed 10 to full trays that serve a crowd. Call (519) 824-5741 for catering orders and pricing."
+                }
+              ].map((faq, i) => (
+                <InteractiveCard key={i} className="bg-white/80 dark:bg-black/80 backdrop-blur-md">
+                  <div className="p-6">
+                    <h3 className="text-xl font-display font-bold text-foreground mb-2">{faq.q}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                  </div>
+                </InteractiveCard>
+              ))}
+            </div>
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Are your meats halal?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. All our meats — chicken, beef, goat, lamb, and assorted meats used in our stews, wraps, soups, and catering trays — are available halal. Just let us know when you order."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you offer dine-in?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, dine-in is now available at 45 Cork St E, Guelph. Online pickup and catering by phone are also available."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are your hours?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Monday to Saturday: 11 AM – 8 PM. Sunday: 1 PM – 8 PM."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you cater events?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we offer catering platters and party trays for all event sizes. Call (519) 824-5741 for pricing."
+                  }
+                }
+              ]
+            })
+          }}
+        />
+      </section>
+
       {/* Location & Hours */}
       <section className="py-24">
+
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
