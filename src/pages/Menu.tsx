@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame, Ban, UtensilsCrossed } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, AlertTriangle, Ban, UtensilsCrossed } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -8,12 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOperatingHours } from "@/hooks/useOperatingHours";
 import { useMenuAvailability } from "@/hooks/useMenuAvailability";
-import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
-import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -27,25 +23,13 @@ const parsePrice = (priceStr: string) => {
 
 const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
-  const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
   const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
-  const { isItemAvailable, isLoading: availabilityLoading } = useMenuAvailability();
+  const { isItemAvailable } = useMenuAvailability();
 
   // Combined check: ordering is available only if pickup is enabled AND restaurant is open
   const orderingAvailable = pickupEnabled && restaurantOpen;
   const isLoadingStatus = pickupLoading || hoursLoading;
-
-  // Check lunch special availability periodically
-  useEffect(() => {
-    const checkAvailability = () => {
-      setLunchAvailable(isLunchSpecialAvailable());
-    };
-
-    // Check every minute
-    const interval = setInterval(checkAvailability, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   const menuSections = [
     {
