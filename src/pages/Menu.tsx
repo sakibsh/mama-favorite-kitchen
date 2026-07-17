@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Plus, Minus, ShoppingCart, Clock, AlertTriangle, Flame, Ban, UtensilsCrossed } from "lucide-react";
+import { Phone, Plus, Minus, ShoppingCart, AlertTriangle, Ban, UtensilsCrossed } from "lucide-react";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { motion } from "framer-motion";
@@ -8,12 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { isLunchSpecialAvailable, getNextLunchSpecialTime } from "@/lib/timezone";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOperatingHours } from "@/hooks/useOperatingHours";
 import { useMenuAvailability } from "@/hooks/useMenuAvailability";
-import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
-import jerkGrill from "@/assets/gallery/jerk-grill.jpeg";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -27,156 +23,122 @@ const parsePrice = (priceStr: string) => {
 
 const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
-  const [lunchAvailable, setLunchAvailable] = useState(isLunchSpecialAvailable());
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
   const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
-  const { isItemAvailable, isLoading: availabilityLoading } = useMenuAvailability();
+  const { isItemAvailable } = useMenuAvailability();
 
   // Combined check: ordering is available only if pickup is enabled AND restaurant is open
   const orderingAvailable = pickupEnabled && restaurantOpen;
   const isLoadingStatus = pickupLoading || hoursLoading;
 
-  // Check lunch special availability periodically
-  useEffect(() => {
-    const checkAvailability = () => {
-      setLunchAvailable(isLunchSpecialAvailable());
-    };
-
-    // Check every minute
-    const interval = setInterval(checkAvailability, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
   const menuSections = [
     {
-      title: "🔥 Jerk Chicken Cuts",
-      subtitle: "NEW — Whole or Half Cuts of our Signature Jerk Chicken",
+      title: "Signature Stew Bowls",
+      description: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti.",
+      subtitle: "Every bowl includes a can of drink + 2oz quinoa salad.",
       orderable: true,
-      isFeatured: true,
       items: [
-        { name: "Half Jerk Chicken", price: "$17.99", description: "Per piece, served with coleslaw salad", badge: "New" },
-        { name: "Whole Jerk Chicken", price: "$29.95", description: "Full bird, marinated in our signature jerk spice blend", badge: "New" },
+        { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", description: "Includes can of drink & 2oz quinoa salad.", badge: "Vegetarian" },
+        { name: "Chicken Stew Bowl", price: "$22.99", description: "Includes can of drink & 2oz quinoa salad.", badge: "Popular" },
+        { name: "Beef Stew Bowl", price: "$23.99", description: "Includes can of drink & 2oz quinoa salad." },
+        { name: "Goat Stew Bowl", price: "$26.99", description: "Includes can of drink & 2oz quinoa salad." },
+        { name: "Lamb Stew Bowl", price: "$27.99", description: "Includes can of drink & 2oz quinoa salad." },
+        { name: "Shrimp Stew Bowl", price: "$26.99", description: "Includes can of drink & 2oz quinoa salad." },
+        { name: "Salmon Stew Bowl", price: "$28.99", description: "Includes can of drink & 2oz quinoa salad." },
       ],
     },
     {
-      title: "Lunch Special",
-      subtitle: lunchAvailable 
-        ? "Available Mon-Fri until 2:30 PM" 
-        : "Currently unavailable • Lunch Specials Monday to Friday (11 am - 2.30 pm)",
+      title: "Add to Your Bowl",
+      description: "Boost any Signature Stew Bowl with your favourite extras.",
       orderable: true,
-      isLunchSpecial: true,
       items: [
-        { name: "Jerk Chicken, Rice & Peas", price: "$10.99", description: "Includes chicken, rice & peas or jollof rice & water or pop", badge: "Popular" },
-        { name: "Curry Chicken (Lunch)", price: "$18.50", description: "Lunch portion size" },
-        { name: "Doubles", price: "$4.40", description: "Curried chickpea flatbread" },
-        { name: "Doubles: Make it Exclusive add Any Meat", price: "$12.65" },
+        { name: "Extra Protein", price: "$6.99" },
+        { name: "Extra Stew", price: "$3.99" },
+        { name: "Fried Plantain (Bowl Add-On)", price: "$4.99" },
+        { name: "Extra Hot Pepper Sauce", price: "$1.99", badge: "Spicy" },
       ],
     },
     {
-      title: "ROTI WRAPS",
+      title: "Traditional African Meals",
+      description: "Served with your choice of swallow (Cassava Fufu, Pounded Yam, Plantain Fufu, or Oat Fufu) and one protein (Goat, Chicken, Beef, Fish, or Assorted Meat).",
       orderable: true,
       items: [
-        { name: "Curry Chicken", price: "$16.49" },
-        { name: "Vegetarian ROTI", price: "$16.49", badge: "Vegetarian" },
+        { name: "Egusi Soup", price: "$26.99" },
+        { name: "Okra Soup", price: "$25.99" },
+        { name: "Bitter Leaf Soup", price: "$26.99" },
+        { name: "Groundnut Soup", price: "$25.99" },
+        { name: "Light Soup", price: "$24.99" },
+        { name: "Goat Pepper Soup (12 oz)", price: "$15.99", badge: "Chef's Choice" },
       ],
     },
     {
-      title: "Dinner",
-      description: "Served with coleslaw/Rice and Peas or Jollof rice",
+      title: "Grab & Go Wraps",
+      description: "All wraps are made with fresh roti.",
       orderable: true,
       items: [
-        { name: "Oxtail Dinner", price: "$24.75", badge: "Chef's Choice" },
-        { name: "Curry Goat Dinner", price: "$24.75" },
-        { name: "Suya Dinner (grilled beef tenderloin)", price: "$24.75" },
-        { name: "Jerk Chicken Dinner", price: "$20.35", badge: "Popular" },
-        { name: "Curry Chicken Dinner", price: "$22.50" },
-        { name: "Pounded Yam (Fufu)", price: "$20.35", description: "Served with any soup" },
-        { name: "Fish Dinner", price: "$24.99", description: "Crocker fish / Wild fish", badge: "New" },
-        { name: "Pasta Dinner", price: "$20.35", description: "With meat, fish or veggies" },
-        { name: "Shrimp Dinner", price: "$20.35" },
-        { name: "Yam Porridge Dinner", price: "$20.35" },
-        { name: "ROTI Dinner", price: "$20.35", description: "Curry-Chicken, Jerk Chicken or Vegetable", badge: "Vegetarian Option" },
-        { name: "Plantain Poutine with Any Meat", price: "$20.35" },
+        { name: "Stew Garden Vegetable Wrap", price: "$13.99", badge: "Vegetarian" },
+        { name: "Stew Chicken Wrap", price: "$16.99" },
+        { name: "Stew Shrimp Wrap", price: "$18.99" },
+        { name: "Stew Salmon Wrap", price: "$19.99" },
       ],
     },
     {
-      title: "Salad",
+      title: "Fresh Doubles",
       orderable: true,
       items: [
-        { name: "Coleslaw (Small)", price: "$5.49" },
-        { name: "Coleslaw (Large)", price: "$6.59" },
-        { name: "Mixed Greens Salad", price: "$5.99", badge: "New" },
-        { name: "Salad With Chicken", price: "$13.99", description: "Mixed greens salad with grilled chicken (+$8)", badge: "New" },
+        { name: "Classic Channa Doubles", price: "$7.49" },
+        { name: "Shrimp Doubles", price: "$10.99" },
+        { name: "Doubles Combo", price: "$13.99", description: "2 Doubles & Drink" },
       ],
     },
     {
-      title: "Soups of the Day (NO MEAT)",
+      title: "Fresh & Healthy",
       orderable: true,
       items: [
-        { name: "Egusi Soup", price: "$8.79" },
-        { name: "Chicken Curry", price: "$8.79" },
-        { name: "Okro Soup", price: "$8.79" },
-        { name: "Vegetable Soup (No Meat)", price: "$8.79", badge: "Vegetarian" },
-        { name: "Goat Pepper Soup", price: "$27.49" },
+        { name: "Quinoa Power Bowl", price: "$16.99" },
+        { name: "Mixed Green Salad", price: "$10.99", badge: "Vegetarian" },
+        { name: "Fruit Cup", price: "$6.99" },
       ],
     },
     {
-      title: "Side Orders",
+      title: "Add Protein",
+      description: "Add to any Fresh & Healthy item.",
       orderable: true,
       items: [
-        { name: "Plantain chips", price: "$4.95" },
-        { name: "Small Pie", price: "$4.95" },
-        { name: "Large Pie", price: "$6.60" },
-        { name: "Rice", price: "$4.95" },
-        { name: "Curry Chicken", price: "$10.99" },
-        { name: "Jerk Chicken", price: "$8.80" },
-        { name: "(Festival)Fried dumplings", price: "$4.95" },
-        { name: "Fried Plantain", price: "$4.95", badge: "Popular" },
-        { name: "Plantain fries", price: "$5.50" },
-        { name: "Roti Skins", price: "$7.14" },
-        { name: "Moi-moi (Steamed Black Eye Bean Pudding)", price: "$5.50" },
-        { name: "Assorted Meat", price: "$27.49" },
-        { name: "Plantain Poutine", price: "$16.49" },
-        { name: "Fufu (1 wrap)", price: "$6.59" },
-        { name: "Jamaican Patty", price: "$3.50", badge: "New" },
+        { name: "Add Chicken", price: "$5.99" },
+        { name: "Add Shrimp", price: "$7.99" },
+        { name: "Add Salmon", price: "$8.99" },
       ],
     },
     {
-      title: "Sauces",
+      title: "House-Made Sauces",
       orderable: true,
       items: [
-        { name: "Hot sauce (2 oz)", price: "$2.20", badge: "Spicy" },
+        { name: "Hot Pepper Sauce", price: "$1.99", badge: "Spicy" },
+        { name: "Green Herb Sauce", price: "$1.99" },
+        { name: "Garlic Sauce", price: "$1.99" },
+        { name: "Tamarind Sauce", price: "$1.99" },
       ],
     },
     {
-      title: "Vegetarian",
+      title: "Sides & Add-Ons",
       orderable: true,
       items: [
-        { name: "Peas & Fried Plantain", price: "$16.49", description: "Roti, Wrap, or full meal", badge: "Vegetarian" },
-        { name: "Doubles with Rice & Grilled Vegetables", price: "$16.49", badge: "Vegetarian" },
-        { name: "Yam Porridge", price: "$16.49", badge: "Vegetarian" },
+        { name: "Fried Plantain", price: "$4.99" },
+        { name: "Extra Roti", price: "$2.50" },
+        { name: "Extra Stew (8 oz)", price: "$3.99" },
+        { name: "Extra Hot Pepper Sauce (Side)", price: "$1.99", badge: "Spicy" },
       ],
     },
     {
-      title: "Desserts",
+      title: "House-Made Drinks",
       orderable: true,
       items: [
-        { name: "Assorted", price: "$5.49" },
-        { name: "Fruit Container", price: "$5.99", badge: "New" },
-      ],
-    },
-    {
-      title: "Beverages",
-      orderable: true,
-      items: [
-        { name: "Pop", price: "$1.93" },
-        { name: "Bottle water", price: "$1.65" },
-        { name: "Bottle Soda drink", price: "$3.30" },
-        { name: "Tea", price: "$2.15" },
-        { name: "Coffee", price: "$2.15" },
-        { name: "Sugar Cane Juice Freshly pressed", price: "$9.89", badge: "Fresh" },
-        { name: "Smoothie (Small)", price: "$6.59" },
-        { name: "Smoothie (Large)", price: "$10.99" },
+        { name: "Ginger Drink", price: "$5.99", badge: "Fresh" },
+        { name: "Fresh Lemonade", price: "$4.99", badge: "Fresh" },
+        { name: "Pop", price: "$1.99" },
+        { name: "Bottled Water", price: "$1.75" },
+        { name: "Bottle Drinks", price: "$3.99" },
       ],
     },
     {
@@ -195,10 +157,11 @@ const Menu = () => {
         { name: "Rice and Peas Pans", price: "Call for price", description: "Traditional Caribbean side" },
         { name: "Assorted Meat Trays", price: "Call for price", description: "Mix of our best meats" },
         { name: "Stew (Various Sizes)", price: "Call for price", description: "Available in multiple portions" },
-        { name: "Goat Pepper Soup", price: "Call for price", description: "Available in multiple portions", badge: "Chef's Choice" },
+        { name: "Goat Pepper Soup (Catering)", price: "Call for price", description: "Available in multiple portions", badge: "Chef's Choice" },
       ],
     },
   ];
+
 
   const handleAddToCart = (item: { name: string; price: string }, category: string) => {
     const id = generateId(item.name, category);
@@ -301,32 +264,11 @@ const Menu = () => {
                 description={section.description}
                 className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-xl"
               >
-                {/* Featured Jerk Chicken Cuts images */}
-                {section.isFeatured && (
-                  <div className="mb-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
-                        <img src={jerkWhole} alt="Whole Jerk Chicken" className="w-full h-full object-cover" loading="lazy" />
-                      </div>
-                      <div className="rounded-xl overflow-hidden aspect-[4/3]">
-                        <img src={jerkGrill} alt="Jerk Chicken on the grill" className="w-full h-full object-cover" loading="lazy" />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-brand-orange/10 text-brand-orange">
-                      <Flame className="h-4 w-4" />
-                      <span className="text-sm font-bold">{section.subtitle}</span>
-                    </div>
-                  </div>
-                )}
-                {/* Lunch special availability notice */}
-                {section.isLunchSpecial && (
-                  <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
-                    lunchAvailable 
-                      ? "bg-brand-green/10 text-brand-green" 
-                      : "bg-muted text-muted-foreground"
-                  }`}>
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm font-medium">{section.subtitle}</span>
+                {/* Section subtitle (e.g., Signature Stew Bowls inclusion note) */}
+                {"subtitle" in section && (section as { subtitle?: string }).subtitle && (
+                  <div className="mb-4 p-3 rounded-lg flex items-center gap-2 bg-brand-green/10 text-brand-green">
+                    <UtensilsCrossed className="h-4 w-4" />
+                    <span className="text-sm font-bold">{(section as { subtitle?: string }).subtitle}</span>
                   </div>
                 )}
                 <div className="grid gap-4">
@@ -402,15 +344,6 @@ const Menu = () => {
                                   <Phone className="h-4 w-4 mr-1" />
                                   Call
                                 </a>
-                              </Button>
-                            ) : section.isLunchSpecial && !lunchAvailable ? (
-                              <Button
-                                size="sm"
-                                disabled
-                                className="bg-muted text-muted-foreground cursor-not-allowed"
-                              >
-                                <Clock className="h-4 w-4 mr-1" />
-                                Unavailable
                               </Button>
                             ) : quantity > 0 ? (
                               <div className="flex items-center gap-2">

@@ -1,34 +1,53 @@
-## Problem
+## Menu Revamp Plan
 
-The admin portal only shows ~27 hardcoded items (in `defaultMenuItems` inside `src/pages/Admin.tsx`). The customer Menu has many more items that are NOT in this list and NOT in the `menu_items` database table — including:
+Rewrite the online menu in `src/pages/Menu.tsx` to match the two new printed menus. Keep only the Catering Trays section from the current menu.
 
-- **Jerk Chicken Cuts**: Half Jerk Chicken, Whole Jerk Chicken
-- **Side Orders**: Plantain chips, Small Pie, Large Pie, Curry Chicken (side), (Festival)Fried dumplings, Roti Skins, Moi-moi, Assorted Meat, Plantain Poutine, Fufu (1 wrap)
-- **Salad**: Coleslaw (Small), Coleslaw (Large)
-- **Sauces**: Hot sauce
-- **Vegetarian**: Peas & Fried Plantain, Doubles with Rice & Grilled Vegetables, Yam Porridge
-- **Desserts**: Assorted
-- **Beverages**: Pop, Bottle water, Bottle Soda drink, Tea, Coffee, Sugar Cane Juice, Smoothie (Small/Large)
-- **Catering trays** (12 items)
+### New menu structure (in order)
 
-Because these names don't exist in the `menu_items` table, `useMenuAvailability` defaults them to "available" with no way for admin to toggle them off.
+**1. Signature Stew Bowls**
+- Subtitle: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti. Every bowl includes a can of drink + 2oz quinoa salad."
+- Each item description also ends with "Includes can of drink & 2oz quinoa salad."
+- Items: Garden Vegetable Stew Bowl (Vegan) $21.99, Chicken $22.99, Beef $23.99, Goat $26.99, Lamb $27.99, Shrimp $26.99, Salmon $28.99
 
-## Fix
+**2. Add to Your Bowl** (orderable add-ons, separate items)
+- Extra Protein $6.99, Extra Stew $3.99, Fried Plantain $4.99, Extra Hot Pepper Sauce $1.99
 
-1. **Seed the database** with every item shown on the customer Menu (`src/pages/Menu.tsx`), using the exact display names so the case-insensitive name match in `useMenuAvailability` works. Use `INSERT ... ON CONFLICT DO NOTHING` (after adding a unique index on `lower(name)`) so existing rows aren't duplicated.
+**3. Traditional African Meals**
+- Description: "Served with your choice of swallow (Cassava Fufu, Pounded Yam, Plantain Fufu, or Oat Fufu) and one protein (Goat, Chicken, Beef, Fish, or Assorted Meat)."
+- Items: Egusi Soup $26.99, Okra $25.99, Bitter Leaf $26.99, Groundnut $25.99, Light Soup $24.99, Goat Pepper Soup (12oz) $15.99
 
-2. **Remove the hardcoded `defaultMenuItems` fallback** in `src/pages/Admin.tsx`. Always load from the DB so the admin list is the single source of truth. If load fails, show an error rather than a stale hardcoded list.
+**4. Grab & Go Wraps** (all fresh roti)
+- Stew Garden Vegetable Wrap $13.99, Stew Chicken Wrap $16.99, Stew Shrimp Wrap $18.99, Stew Salmon Wrap $19.99
 
-3. **Name normalization**: a few customer-menu names differ slightly from existing DB rows (e.g. Menu shows "Curry Chicken" under ROTI WRAPS, DB has "Curry Chicken Roti"; Menu shows "Suya Dinner (grilled beef tenderloin)", DB has "Suya Dinner"; Menu shows "Doubles: Make it Exclusive add Any Meat", DB has "Doubles: Make it Exclusive"; Menu shows "Vegetable Soup (No Meat)", DB has "Vegetable Soup"). I will update the Menu.tsx labels OR rename DB rows so the names match exactly — easiest is to update DB rows to match the customer-facing labels (since those are what the user sees and what the availability hook compares against).
+**5. Fresh Doubles**
+- Classic Channa Doubles $7.49, Shrimp Doubles $10.99, Doubles Combo (2 Doubles & Drink) $13.99
 
-4. **Catering items** are not orderable (orderable: false on that section). Still seed them so admin can mark them unavailable if desired — but they won't render an "Add to Cart" button on the menu regardless. We'll add an `is_orderable` column? Not needed — the menu's orderable flag stays section-level. Just seeding is enough.
+**6. Fresh & Healthy**
+- Quinoa Power Bowl $16.99, Mixed Green Salad $10.99, Fruit Cup $6.99
 
-## Technical steps
+**7. Add Protein** (separate orderable add-ons)
+- Chicken $5.99, Shrimp $7.99, Salmon $8.99
 
-1. Migration: add `CREATE UNIQUE INDEX menu_items_name_lower_idx ON menu_items (lower(name));`
-2. Data inserts (via insert tool): add ~40 missing rows; rename ~4 mismatched rows to match Menu.tsx labels.
-3. Edit `src/pages/Admin.tsx`:
-   - Delete the `defaultMenuItems` array (lines ~46–74).
-   - In `loadMenuItems`, remove the fallback that seeds `defaultMenuItems`; on empty/error show a toast and an empty state.
+**8. House-Made Sauces** — all $1.99
+- Hot Pepper, Green Herb, Garlic, Tamarind
 
-After this, every item on the menu will appear in the admin "Menu Availability" tab and toggling "Sold Out" will reflect on the customer site in real time (already wired via `useMenuAvailability`).
+**9. Sides & Add-Ons**
+- Fried Plantain $4.99, Extra Roti $2.50, Extra Stew (8oz) $3.99, Extra Hot Pepper Sauce $1.99
+
+**10. House-Made Drinks**
+- Ginger Drink $5.99, Fresh Lemonade $4.99, Pop $1.99, Bottled Water $1.75, Bottle Drinks $3.99
+
+**11. Catering Platters & Party Trays** (KEPT as-is, phone to order)
+
+### Sections removed
+Jerk Chicken Cuts, Lunch Special, current Roti Wraps, Dinner (Oxtail/Curry Goat/Suya/Jerk Chicken Dinner/Curry Chicken Dinner/Pounded Yam/Fish/Pasta/Shrimp/Yam Porridge/ROTI/Plantain Poutine), current Salad/Soups/Side Orders/Vegetarian/Desserts/Beverages sections.
+
+### Technical notes
+- Single file edit: `src/pages/Menu.tsx` — replace the `menuSections` array. No schema, cart, checkout, or admin changes.
+- Remove now-unused imports/state: `Flame`, `Clock`, jerk chicken images, `lunchAvailable` state + `isLunchSpecialAvailable`/`getNextLunchSpecialTime`, and the `isLunchSpecial`/`isFeatured` branches in the render.
+- Keep pickup-enabled / operating-hours / availability logic and the "Sold Out" toggle exactly as-is.
+- Badges: mark "Chicken Stew Bowl" as Popular, "Garden Vegetable Stew Bowl" and "Stew Garden Vegetable Wrap" as Vegetarian, "Goat Pepper Soup" as Chef's Choice, "Hot Pepper Sauce" as Spicy, "Fresh Lemonade" and "Ginger Drink" as Fresh.
+- The database `menu_items` table is not currently used by the customer menu (menu is hardcoded in `Menu.tsx`), so no data migration is needed for the UI change. Admin sold-out toggling continues to match by item name.
+
+### Not in scope
+No modifier/options UI, no cart schema changes, no email/admin template changes.
