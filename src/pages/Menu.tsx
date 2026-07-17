@@ -345,15 +345,6 @@ const Menu = () => {
                                   Call
                                 </a>
                               </Button>
-                            ) : section.isLunchSpecial && !lunchAvailable ? (
-                              <Button
-                                size="sm"
-                                disabled
-                                className="bg-muted text-muted-foreground cursor-not-allowed"
-                              >
-                                <Clock className="h-4 w-4 mr-1" />
-                                Unavailable
-                              </Button>
                             ) : quantity > 0 ? (
                               <div className="flex items-center gap-2">
                                 <Button
