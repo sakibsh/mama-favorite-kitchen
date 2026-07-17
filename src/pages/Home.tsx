@@ -252,16 +252,27 @@ const Home = () => {
               </motion.div>
             </div>
 
-            {/* Dine-in announcement */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-gold shadow-lg"
-            >
-              <UtensilsCrossed className="h-5 w-5 text-brand-green" />
-              <span className="text-base font-bold text-brand-green">Dine-in now available!</span>
-            </motion.div>
+            {/* Dine-in + Halal announcements */}
+            <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-gold shadow-lg"
+              >
+                <UtensilsCrossed className="h-5 w-5 text-brand-green" />
+                <span className="text-base font-bold text-brand-green">Dine-in now available!</span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-green shadow-lg"
+              >
+                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-white text-brand-green font-black text-xs">✓</span>
+                <span className="text-base font-bold text-white">All meats available Halal</span>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
 
