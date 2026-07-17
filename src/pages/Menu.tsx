@@ -73,7 +73,7 @@ const Menu = () => {
     },
     {
       title: "Grab & Go Wraps",
-      description: "All wraps are made with fresh roti.",
+      description: "All wraps are made with fresh roti. Halal meats available — just ask.",
       orderable: true,
       items: [
         { name: "Stew Garden Vegetable Wrap", price: "$13.99", badge: "Vegetarian" },
