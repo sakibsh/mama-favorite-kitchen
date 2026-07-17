@@ -144,7 +144,7 @@ const Menu = () => {
     },
     {
       title: "Catering Platters & Party Trays",
-      description: "Perfect for events, parties, and gatherings",
+      description: "Perfect for events, parties, and gatherings. Halal meats available on request.",
       orderable: false, // Catering requires phone call
       items: [
         { name: "LG Tray of Jerk Chicken", price: "$160.00", description: "Feeds 20 people", badge: "Popular" },
