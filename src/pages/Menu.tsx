@@ -237,15 +237,21 @@ const Menu = () => {
             </p>
           </motion.div>
 
-          {/* Dine-in notice */}
+          {/* Dine-in + Halal notice */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-green"
+            className="mt-4 flex flex-wrap items-center justify-center gap-3"
           >
-            <UtensilsCrossed className="h-4 w-4" />
-            <span>Dine-in now available — come eat with us!</span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green/10 text-brand-green text-sm font-bold">
+              <UtensilsCrossed className="h-4 w-4" />
+              Dine-in now available
+            </span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green text-white text-sm font-bold shadow-md">
+              <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-white text-brand-green font-black text-[10px]">✓</span>
+              All meats available Halal — just ask
+            </span>
           </motion.div>
         </div>
 
