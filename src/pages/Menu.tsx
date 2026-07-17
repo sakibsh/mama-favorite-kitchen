@@ -34,7 +34,7 @@ const Menu = () => {
   const menuSections = [
     {
       title: "Signature Stew Bowls",
-      description: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti.",
+      description: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti. All meats available Halal — just ask.",
       subtitle: "Every bowl includes a can of drink + 2oz quinoa salad.",
       orderable: true,
       items: [
