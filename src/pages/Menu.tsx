@@ -126,6 +126,7 @@ const Menu = () => {
       items: [
         { name: "Fried Plantain", price: "$4.99" },
         { name: "Extra Roti", price: "$2.50" },
+        { name: "Roti (Full Portion)", price: "$6.49" },
         { name: "Extra Stew (8 oz)", price: "$3.99" },
         { name: "Extra Hot Pepper Sauce (Side)", price: "$1.99", badge: "Spicy" },
       ],
