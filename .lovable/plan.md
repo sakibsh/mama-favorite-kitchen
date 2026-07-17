@@ -1,28 +1,17 @@
-## Sync Admin Menu with New Menu
+## Add Extra Roti ($6.49) to Menu
 
-The admin portal (`/admin` → Menu tab) reads from the `menu_items` database table, while the customer menu on `/menu` is hardcoded in `src/pages/Menu.tsx`. After the recent menu revamp, the DB was never updated, which is why admin still shows the old items.
+The Sides & Add-Ons section currently lists "Extra Roti — $2.50" (a single piece add-on). The new $6.49 price appears to be for a larger roti order (e.g. a full portion / pack), so it should sit alongside the existing item rather than replace it.
 
-### Fix
+### Change
+In `src/pages/Menu.tsx`, under **Sides & Add-Ons**, add a new item right after the existing "Extra Roti":
+- Name: `Roti (Full Portion)` — $6.49
 
-Replace the contents of the `menu_items` table so it matches the new hardcoded menu exactly (same names, so the "Sold Out" toggle continues to link up via `useMenuAvailability`).
-
-Steps:
-1. `DELETE FROM public.menu_items` (wipes old items).
-2. `INSERT` all items from the new menu across these categories:
-   - Signature Stew Bowls (7)
-   - Add to Your Bowl (4)
-   - Traditional African Meals (6)
-   - Grab & Go Wraps (4)
-   - Fresh Doubles (3)
-   - Fresh & Healthy (3)
-   - Add Protein (3)
-   - House-Made Sauces (4)
-   - Sides & Add-Ons (4)
-   - House-Made Drinks (5)
-   - Catering Platters & Party Trays (12) — included so admin can toggle availability; customer menu already shows these as call-to-order.
-
-Item `name`, `category`, `price`, and `description` will mirror `menuSections` in `Menu.tsx` precisely so name-based availability matching keeps working. `is_available` defaults to true.
+### Database sync
+Insert the same item into the `menu_items` table (category: `Sides & Add-Ons`) so it appears in the Admin portal Sold Out toggles.
 
 ### Not in scope
-- No changes to `Menu.tsx`, cart, checkout, or admin UI code.
-- No schema changes — this is a data-only migration performed via the insert tool (DELETE + INSERT).
+- No changes to the existing $2.50 Extra Roti.
+- No layout/UI changes.
+
+### Question
+Is $6.49 meant to **replace** the $2.50 Extra Roti (price update), or is it a **separate larger portion** to add alongside it? Default in this plan is: add as separate item labeled "Roti (Full Portion)". Let me know if you'd rather I just update the existing price.
