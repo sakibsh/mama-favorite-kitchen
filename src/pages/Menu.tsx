@@ -60,7 +60,7 @@ const Menu = () => {
     },
     {
       title: "Traditional African Meals",
-      description: "Served with your choice of swallow (Cassava Fufu, Pounded Yam, Plantain Fufu, or Oat Fufu) and one protein (Goat, Chicken, Beef, Fish, or Assorted Meat).",
+      description: "Served with your choice of swallow (Cassava Fufu, Pounded Yam, Plantain Fufu, or Oat Fufu) and one protein (Goat, Chicken, Beef, Fish, or Assorted Meat). All meats available Halal — just ask.",
       orderable: true,
       items: [
         { name: "Egusi Soup", price: "$26.99" },
