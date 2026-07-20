@@ -40,8 +40,10 @@ const Menu = () => {
       items: [
         { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", description: "Includes can of drink & 4oz quinoa salad.", badge: "Vegetarian" },
         { name: "Chicken Stew Bowl", price: "$22.99", description: "Includes can of drink & 4oz quinoa salad.", badge: "Popular" },
+        { name: "Boneless Chicken Curry Stew Bowl", price: "$22.99", description: "Rich, aromatic curry with tender boneless chicken. Includes can of drink & 4oz quinoa salad.", badge: "New" },
         { name: "Beef Stew Bowl", price: "$23.99", description: "Includes can of drink & 4oz quinoa salad." },
         { name: "Goat Stew Bowl", price: "$26.99", description: "Includes can of drink & 4oz quinoa salad." },
+        { name: "Boneless Goat Curry Stew Bowl", price: "$26.99", description: "Slow-simmered curry with tender boneless goat. Includes can of drink & 4oz quinoa salad.", badge: "New" },
         { name: "Lamb Stew Bowl", price: "$27.99", description: "Includes can of drink & 4oz quinoa salad." },
         { name: "Shrimp Stew Bowl", price: "$26.99", description: "Includes can of drink & 4oz quinoa salad." },
         { name: "Salmon Stew Bowl", price: "$28.99", description: "Includes can of drink & 4oz quinoa salad." },
