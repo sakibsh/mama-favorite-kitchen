@@ -9,6 +9,10 @@ import jollofRice from "@/assets/gallery/jollof-rice.webp";
 import curryGoat from "@/assets/gallery/curry-goat.webp";
 import fufuEgusi from "@/assets/gallery/fufu-egusi.webp";
 import jerkWhole from "@/assets/gallery/jerk-whole.jpeg";
+import stewCurryChicken from "@/assets/gallery/stew-curry-chicken.webp";
+import stewCurryFish from "@/assets/gallery/stew-curry-fish.webp";
+import freshRoti from "@/assets/gallery/fresh-roti.webp";
+import stewChickenBoneIn from "@/assets/gallery/stew-chicken-bone-in.webp";
 import { ShaderText } from "@/components/ShaderText";
 import { InteractiveCard } from "@/components/InteractiveCard";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -137,6 +141,26 @@ const Home = () => {
       image: jerkWhole,
       name: "Whole Jerk Chicken",
       description: "Whole or half cuts of our signature jerk chicken — perfectly seasoned & grilled",
+    },
+    {
+      image: stewCurryChicken,
+      name: "Stew Curry Chicken",
+      description: "Slow-simmered curry chicken in a rich, aromatic sauce with sweet onions",
+    },
+    {
+      image: stewCurryFish,
+      name: "Stew Curry Fish",
+      description: "Fresh fish braised in vibrant curry with bell peppers and fragrant dill",
+    },
+    {
+      image: freshRoti,
+      name: "Freshly Baked Roti",
+      description: "Warm, flaky roti baked fresh in-house daily — the perfect scoop for every stew",
+    },
+    {
+      image: stewChickenBoneIn,
+      name: "Stew Chicken (Bone-In)",
+      description: "Traditional bone-in stew chicken layered with peppers, onions and fresh herbs",
     },
   ];
 
