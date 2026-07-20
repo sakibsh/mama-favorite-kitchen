@@ -1,37 +1,29 @@
-## Goal
-Make it clear across the site that all our meats are available in halal options.
+## Plan
 
-## Changes
+### 1. Process & add the 4 uploaded dish images
+The uploaded photos are phone shots of hotel-pan trays that need cropping/rotating for presentation. Process each with Python (PIL) to:
+- Auto-rotate to landscape orientation (matching existing gallery images)
+- Center-crop to a 4:3 ratio focused on the food
+- Convert to optimized WebP (per project rule: all images must be WebP)
+- Save to `src/assets/gallery/`:
+  - `stew-curry-chicken.webp` (from image-16 — curry chicken with onions)
+  - `stew-curry-fish.webp` (from image-17 — fish with peppers & dill)
+  - `fresh-roti.webp` (from image-18 — freshly baked roti)
+  - `stew-chicken-bone-in.webp` (from image-19 — bone-in stew chicken with peppers)
 
-### 1. Menu page (`src/pages/Menu.tsx`)
-- Add a prominent green "Halal Available" notice near the top of the menu (below the ordering status / dine-in line), stating: **"All our meats are available halal on request."**
-- Add the same short line into the description of every meat-containing section:
-  - Signature Stew Bowls
-  - Traditional African Meals
-  - Grab & Go Wraps
-  - Add to Your Bowl / Add Protein
-  - Catering Platters & Party Trays
-- Add a small `Halal` badge (new badge variant styled in brand-green) on key meat items (Chicken/Beef/Goat/Lamb bowls, Curry Chicken/Goat catering trays, Jerk Chicken trays).
+### 2. Add to Signature Dishes carousel on Home
+Edit `src/pages/Home.tsx`:
+- Add 4 new imports for the WebP files
+- Append 4 new entries to the `dishes` array (lines 115–141) with names and short descriptions:
+  - "Stew Curry Chicken" — Slow-simmered curry chicken in rich, aromatic sauce
+  - "Stew Curry Fish" — Fresh fish braised in vibrant curry with bell peppers & dill
+  - "Freshly Baked Roti" — Warm, flaky roti baked in-house daily
+  - "Stew Chicken (Bone-In)" — Traditional bone-in stew chicken with peppers & herbs
+- The existing auto-play carousel will pick them up automatically.
 
-### 2. Home page (`src/pages/Home.tsx`)
-- Add a compact "Halal available" highlight to the hero area (small pill under the CTA buttons, styled consistently with the existing gold "Dine-in now available" banner but using brand-green so they don't compete).
-- Add one line mentioning halal in the existing "Why choose us" / story section (whichever section currently lists our value props) so it appears in body content for SEO.
+### 3. Update salad portion 2oz → 4oz
+In `src/pages/Menu.tsx`, replace every "2oz quinoa salad" with "4oz quinoa salad" in the Signature Stew Bowls section subtitle and each of the 7 stew bowl item descriptions.
 
-### 3. FAQ (new lightweight section on Home)
-- Add a small FAQ block near the bottom of Home with 3–4 Q&As, the first being **"Are your meats halal?"** answered with a clear yes. Other Q&As pulled from existing info (pickup hours, dine-in, catering) so the section feels complete rather than one-off.
-- Include FAQ JSON-LD structured data for SEO.
-
-### 4. SEO metadata (`index.html`)
-- Append "Halal options available" to the meta description so it surfaces in search snippets.
-
-## Technical notes
-- New `Halal` badge: add a case in the existing badge color switch in `Menu.tsx` (brand-green background, white text). No new component needed.
-- FAQ section: plain React + Tailwind, no new dependencies. Add a `<script type="application/ld+json">` via a small `SEOHead` update or inline in the section using `dangerouslySetInnerHTML` on a `<script>` element rendered in the section.
-- No database or backend changes.
-
-## Out of scope
-- No change to admin portal, cart, checkout, or menu_items table.
-- Not adding a halal certificate image (can be added later if you have one).
-
-## Question
-Do you want the halal note phrased as **"All meats are halal"** (i.e. always) or **"Halal options available on request"**? The plan currently uses "available on request" — say the word and I'll switch to the stronger phrasing everywhere.
+### Notes
+- No admin/database changes needed (dish names/descriptions on Home are static; menu descriptions are frontend-only text).
+- No memory update needed — signature dishes gallery memory already covers the pattern.
