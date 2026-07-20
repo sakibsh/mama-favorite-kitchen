@@ -142,6 +142,26 @@ const Home = () => {
       name: "Whole Jerk Chicken",
       description: "Whole or half cuts of our signature jerk chicken — perfectly seasoned & grilled",
     },
+    {
+      image: stewCurryChicken,
+      name: "Stew Curry Chicken",
+      description: "Slow-simmered curry chicken in a rich, aromatic sauce with sweet onions",
+    },
+    {
+      image: stewCurryFish,
+      name: "Stew Curry Fish",
+      description: "Fresh fish braised in vibrant curry with bell peppers and fragrant dill",
+    },
+    {
+      image: freshRoti,
+      name: "Freshly Baked Roti",
+      description: "Warm, flaky roti baked fresh in-house daily — the perfect scoop for every stew",
+    },
+    {
+      image: stewChickenBoneIn,
+      name: "Stew Chicken (Bone-In)",
+      description: "Traditional bone-in stew chicken layered with peppers, onions and fresh herbs",
+    },
   ];
 
   const testimonials = [
