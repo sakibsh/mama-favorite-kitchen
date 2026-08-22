@@ -35,12 +35,13 @@ const Menu = () => {
     {
       title: "Signature Stew Bowls",
       description: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti. All meats available Halal — just ask.",
-      subtitle: "Every bowl includes a can of drink + 4oz quinoa salad.",
+      subtitle: "Every dinner bowl includes your choice of drink from the fridge + a 4oz quinoa salad.",
       orderable: true,
       items: [
-        { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", description: "Includes can of drink & 4oz quinoa salad.", badge: "Vegetarian" },
-        { name: "Chicken Stew Bowl", price: "$22.99", description: "Includes can of drink & 4oz quinoa salad.", badge: "Popular" },
-        { name: "Boneless Chicken Curry Stew Bowl", price: "$22.99", description: "Rich, aromatic curry with tender boneless chicken. Includes can of drink & 4oz quinoa salad.", badge: "New" },
+        { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", description: "Includes choice of drink & 4oz quinoa salad.", badge: "Vegetarian" },
+        { name: "Curry Chicken", price: "$21.99", description: "Classic curry chicken simmered in fragrant spices. Includes choice of drink & 4oz quinoa salad.", badge: "New" },
+        { name: "Chicken Stew Bowl", price: "$22.99", description: "Includes choice of drink & 4oz quinoa salad.", badge: "Popular" },
+        { name: "Boneless Chicken Curry Stew Bowl", price: "$22.99", description: "Rich, aromatic curry with tender boneless chicken. Includes choice of drink & 4oz quinoa salad.", badge: "New" },
         { name: "Beef Stew Bowl", price: "$23.99", description: "Includes can of drink & 4oz quinoa salad." },
         { name: "Goat Stew Bowl", price: "$26.99", description: "Includes can of drink & 4oz quinoa salad." },
         { name: "Boneless Goat Curry Stew Bowl", price: "$26.99", description: "Slow-simmered curry with tender boneless goat. Includes can of drink & 4oz quinoa salad.", badge: "New" },
