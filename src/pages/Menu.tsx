@@ -83,6 +83,7 @@ const Menu = () => {
         { name: "Stew Chicken Wrap", price: "$16.99" },
         { name: "Stew Shrimp Wrap", price: "$18.99" },
         { name: "Stew Salmon Wrap", price: "$19.99" },
+        { name: "Chicken Roti", price: "$21.99", description: "Curry chicken and potatoes wrapped in fresh baked roti.", badge: "New" },
       ],
     },
     {
