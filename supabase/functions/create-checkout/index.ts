@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -42,11 +43,30 @@ serve(async (req) => {
     const body: CheckoutRequest = await req.json();
     console.log("Checkout request received:", JSON.stringify(body));
 
-    const { items, customerName, customerEmail, customerPhone, pickupTime, specialInstructions, subtotal, tax, total } = body;
+    const { customerName, customerEmail, customerPhone, pickupTime, specialInstructions } = body;
+    const rawItems = body.items;
 
-    if (!items || items.length === 0) {
+    if (!Array.isArray(rawItems) || rawItems.length === 0) {
       throw new Error("No items in cart");
     }
+
+    // Re-price every item from the database (admin-set prices are the source of truth)
+    const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: menuRows, error: menuErr } = await db.from("menu_items").select("name, price, is_available");
+    if (menuErr) throw new Error("Could not load menu prices");
+    const priceMap = new Map((menuRows || []).map((r: any) => [String(r.name).toLowerCase().trim(), r]));
+
+    const items: CartItem[] = rawItems.map((item) => {
+      const row: any = priceMap.get(String(item.name).toLowerCase().trim());
+      const qty = Math.floor(Number(item.quantity));
+      if (!row || !(Number(row.price) > 0)) throw new Error(`"${item.name}" can't be ordered online`);
+      if (!row.is_available) throw new Error(`"${item.name}" is sold out`);
+      if (!(qty >= 1 && qty <= 100)) throw new Error("Invalid quantity");
+      return { id: item.id, name: row.name, price: Number(row.price), quantity: qty };
+    });
+    const subtotal = Math.round(items.reduce((s, i) => s + i.price * i.quantity, 0) * 100) / 100;
+    const tax = Math.round(subtotal * 0.13 * 100) / 100;
+    const total = Math.round((subtotal + tax) * 100) / 100;
 
     // Create line items for Stripe Checkout
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item) => ({
