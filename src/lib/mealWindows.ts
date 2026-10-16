@@ -3,8 +3,8 @@ import { getTorontoNow } from "./timezone";
 export type MealWindow = { start: number; end: number; label: string }; // minutes since midnight, end exclusive
 
 export const MEAL_WINDOWS: Record<string, MealWindow> = {
-  "Small Lunch (Chicken)": { start: 11 * 60, end: 14 * 60, label: "Available 11am–2pm" },
-  "Medium Lunch (Chicken)": { start: 14 * 60, end: 17 * 60, label: "Available 2pm–5pm" },
+  "Chicken Special": { start: 11 * 60, end: 14 * 60 + 30, label: "Available 11am–2:30pm" },
+  "Chicken Lunch": { start: 14 * 60 + 30, end: 17 * 60, label: "Available 2:30pm–5pm" },
 };
 
 export function isInWindow(window: MealWindow, date: Date): boolean {
