@@ -10,7 +10,9 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShaderText } from "@/components/ShaderText";
-import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, Power, Bell, BellRing, Volume2, VolumeX } from "lucide-react";
+import { Clock, Package, ChefHat, LogOut, RefreshCw, Search, AlertCircle, Power, Bell, BellRing, Volume2, VolumeX, Pencil, Trash2, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { getTodayStartInToronto, getTodayEndInToronto, formatTodayTime } from "@/lib/timezone";
@@ -39,6 +41,7 @@ interface MenuItem {
   name: string;
   price: number;
   category: string;
+  description?: string | null;
   is_available: boolean;
 }
 
@@ -57,6 +60,8 @@ export default function Admin() {
   const { hours: operatingHours, isOpen: restaurantOpen, isLoading: hoursLoading } = useOperatingHours();
   const [editingHours, setEditingHours] = useState<Record<string, { open: string; close: string }> | null>(null);
   const [isSavingHours, setIsSavingHours] = useState(false);
+  const [editItem, setEditItem] = useState<{ id?: string; name: string; price: string; description: string; category: string } | null>(null);
+  const [isSavingItem, setIsSavingItem] = useState(false);
   // Callback for when orders are acknowledged
   const handleOrderAcknowledged = useCallback((orderId: string, acknowledged: boolean) => {
     setOrders(current => 
@@ -274,6 +279,43 @@ export default function Admin() {
       // Still show success since local state is updated
       toast.success(isAvailable ? "Item is now available" : "Item marked as unavailable");
     }
+  };
+
+  const openEditor = (item: Partial<MenuItem> & { category: string }) => {
+    setEditItem({
+      id: item.id,
+      name: item.name || "",
+      price: item.price ? String(item.price) : "",
+      description: item.description || "",
+      category: item.category,
+    });
+  };
+
+  const saveMenuItem = async () => {
+    if (!editItem) return;
+    const name = editItem.name.trim();
+    const category = editItem.category.trim();
+    const price = editItem.price.trim() === "" ? 0 : Number(editItem.price);
+    if (!name || !category) return toast.error("Name and section are required");
+    if (!Number.isFinite(price) || price < 0 || price > 10000) return toast.error("Enter a valid price");
+    const payload = { name, category, price: Math.round(price * 100) / 100, description: editItem.description.trim() || null };
+    setIsSavingItem(true);
+    const { error } = editItem.id
+      ? await supabase.from("menu_items").update(payload).eq("id", editItem.id)
+      : await supabase.from("menu_items").insert(payload);
+    setIsSavingItem(false);
+    if (error) return toast.error(error.message.includes("unique") || error.code === "23505" ? "An item with that name already exists" : "Failed to save item");
+    toast.success(editItem.id ? "Item updated" : "Item added");
+    setEditItem(null);
+    loadMenuItems();
+  };
+
+  const deleteMenuItem = async (item: MenuItem) => {
+    if (!window.confirm(`Delete "${item.name}" from the menu?`)) return;
+    const { error } = await supabase.from("menu_items").delete().eq("id", item.id);
+    if (error) return toast.error("Failed to delete item");
+    toast.success("Item deleted");
+    loadMenuItems();
   };
 
   const getStatusColor = (status: string) => {
