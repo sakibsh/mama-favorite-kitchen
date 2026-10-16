@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOperatingHours } from "@/hooks/useOperatingHours";
+import { isMealTimeAvailable, MEAL_WINDOWS } from "@/lib/mealWindows";
 
 
 export default function Checkout() {
@@ -60,6 +61,12 @@ export default function Checkout() {
 
     if (items.length === 0) {
       toast.error("Your cart is empty");
+      return;
+    }
+
+    const outOfWindow = items.find((i) => !isMealTimeAvailable(i.name));
+    if (outOfWindow) {
+      toast.error(`${outOfWindow.name} is not available right now (${MEAL_WINDOWS[outOfWindow.name].label}). Please remove it from your cart.`);
       return;
     }
 
