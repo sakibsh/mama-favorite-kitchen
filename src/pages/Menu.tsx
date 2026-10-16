@@ -398,7 +398,7 @@ const Menu = () => {
                               <Ban className="h-4 w-4 mr-1" />
                               {timeOk ? "Sold Out" : "Not now"}
                             </Button>
-                          ) : section.orderable ? (
+                          ) : section.orderable && item.price ? (
                             // Check if ordering is unavailable
                             !orderingAvailable ? (
                               <Button
