@@ -729,7 +729,9 @@ export default function Admin() {
                             <p className={`font-medium ${!item.is_available && "line-through"}`}>
                               {item.name}
                             </p>
-                            <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                            {item.price > 0 && (
+                              <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                            )}
                           </div>
                           <div className="flex items-center gap-3">
                             <span className="text-sm text-muted-foreground">
