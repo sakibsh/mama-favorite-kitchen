@@ -177,21 +177,21 @@ const Menu = () => {
     },
     {
       title: "Catering Platters & Party Trays",
-      description: "Perfect for events, parties, and gatherings. Halal meats available on request.",
+      description: "Perfect for events, parties, and gatherings. Pricing quoted by phone — halal meats available on request.",
       orderable: false, // Catering requires phone call
       items: [
-        { name: "LG Tray of Jerk Chicken", price: "$160.00", description: "Feeds 20 people", badge: "Popular" },
-        { name: "LG Tray of Rice (Any Kind)", price: "$140.00", description: "Feeds 20 people" },
-        { name: "Half Tray of Curry Chicken", price: "$149.99", description: "Feeds 10 people" },
-        { name: "Half Tray of Curry Goat", price: "$185.00", description: "Feeds 10 people" },
-        { name: "Curry Goat (Full)", price: "$249.99", description: "Serves 10 people" },
-        { name: "Oxtail (Full)", price: "$249.99", description: "Feeds 10 people" },
-        { name: "Full Tray of Jerk Chicken", price: "Call for price", description: "Serves a crowd" },
-        { name: "Jollof Rice Pans", price: "Call for price", description: "Authentic West African rice" },
-        { name: "Rice and Peas Pans", price: "Call for price", description: "Traditional Caribbean side" },
-        { name: "Assorted Meat Trays", price: "Call for price", description: "Mix of our best meats" },
-        { name: "Stew (Various Sizes)", price: "Call for price", description: "Available in multiple portions" },
-        { name: "Goat Pepper Soup (Catering)", price: "Call for price", description: "Available in multiple portions", badge: "Chef's Choice" },
+        { name: "LG Tray of Jerk Chicken", price: "", description: "Feeds 20 people", badge: "Popular" },
+        { name: "LG Tray of Rice (Any Kind)", price: "", description: "Feeds 20 people" },
+        { name: "Half Tray of Curry Chicken", price: "", description: "Feeds 10 people" },
+        { name: "Half Tray of Curry Goat", price: "", description: "Feeds 10 people" },
+        { name: "Curry Goat (Full)", price: "", description: "Serves 10 people" },
+        { name: "Oxtail (Full)", price: "", description: "Feeds 10 people" },
+        { name: "Full Tray of Jerk Chicken", price: "", description: "Serves a crowd" },
+        { name: "Jollof Rice Pans", price: "", description: "Authentic West African rice" },
+        { name: "Rice and Peas Pans", price: "", description: "Traditional Caribbean side" },
+        { name: "Assorted Meat Trays", price: "", description: "Mix of our best meats" },
+        { name: "Stew (Various Sizes)", price: "", description: "Available in multiple portions" },
+        { name: "Goat Pepper Soup (Catering)", price: "", description: "Available in multiple portions", badge: "Chef's Choice" },
       ],
     },
   ];
@@ -361,9 +361,11 @@ const Menu = () => {
                       </div>
                         
                         <div className="flex items-center gap-4">
-                          <span className={`font-bold text-xl whitespace-nowrap ${available ? "text-brand-orange" : "text-muted-foreground"}`}>
-                        {item.price}
-                      </span>
+                          {item.price ? (
+                            <span className={`font-bold text-xl whitespace-nowrap ${available ? "text-brand-orange" : "text-muted-foreground"}`}>
+                              {item.price}
+                            </span>
+                          ) : null}
                           
                           {!available ? (
                             <Button
