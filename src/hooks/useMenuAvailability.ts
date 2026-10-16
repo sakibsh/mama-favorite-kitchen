@@ -1,68 +1,53 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-interface MenuItemAvailability {
+export interface DbMenuItem {
+  id: string;
   name: string;
+  price: number;
+  category: string;
+  description: string | null;
   is_available: boolean;
+  created_at: string;
 }
 
+const key = (s: string) => s.toLowerCase().trim();
+
+/** Live menu data from the database (admin-editable): prices, descriptions, availability. */
 export function useMenuAvailability() {
-  const [unavailableItems, setUnavailableItems] = useState<Set<string>>(new Set());
+  const [items, setItems] = useState<DbMenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchAvailability = async () => {
+  const fetchItems = async () => {
     try {
       const { data, error } = await supabase
         .from("menu_items")
-        .select("name, is_available");
-
+        .select("id, name, price, category, description, is_available, created_at")
+        .order("created_at");
       if (error) {
-        console.error("Error fetching menu availability:", error);
+        console.error("Error fetching menu items:", error);
         return;
       }
-
-      if (data) {
-        const unavailable = new Set(
-          data
-            .filter((item: MenuItemAvailability) => !item.is_available)
-            .map((item: MenuItemAvailability) => item.name.toLowerCase().trim())
-        );
-        setUnavailableItems(unavailable);
-      }
-    } catch (error) {
-      console.error("Error fetching menu availability:", error);
+      setItems((data as DbMenuItem[]) || []);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAvailability();
-
-    // Subscribe to realtime changes
+    fetchItems();
     const channel = supabase
       .channel("menu-items-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "menu_items",
-        },
-        () => {
-          fetchAvailability();
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "menu_items" }, () => fetchItems())
       .subscribe();
-
     return () => {
       supabase.removeChannel(channel);
     };
   }, []);
 
-  const isItemAvailable = (itemName: string): boolean => {
-    return !unavailableItems.has(itemName.toLowerCase().trim());
-  };
+  const byName = new Map(items.map((i) => [key(i.name), i]));
+  const getItem = (name: string) => byName.get(key(name));
+  const isItemAvailable = (name: string) => getItem(name)?.is_available ?? true;
 
-  return { isItemAvailable, isLoading };
+  return { items, getItem, isItemAvailable, isLoading };
 }

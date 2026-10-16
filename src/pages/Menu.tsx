@@ -26,7 +26,7 @@ const Menu = () => {
   const { addItem, getItemQuantity, updateQuantity, setIsOpen } = useCart();
   const { pickupEnabled, isLoading: pickupLoading } = usePickupSettings();
   const { isOpen: restaurantOpen, nextOpenTime, isLoading: hoursLoading } = useOperatingHours();
-  const { isItemAvailable } = useMenuAvailability();
+  const { items: dbItems, getItem, isItemAvailable, isLoading: menuLoading } = useMenuAvailability();
 
   // Combined check: ordering is available only if pickup is enabled AND restaurant is open
   const orderingAvailable = pickupEnabled && restaurantOpen;
@@ -196,6 +196,28 @@ const Menu = () => {
     },
   ];
 
+  // Merge with database (admin-editable): DB price/description win; items removed/renamed in admin
+  // are hidden; DB items not in the static list are appended to their section.
+  type SectionItem = { name: string; price: string; description?: string; badge?: string };
+  const fmtPrice = (p: number) => (p > 0 ? `$${Number(p).toFixed(2)}` : "");
+  const liveSections = menuSections.map((section) => {
+    const staticItems = section.items as SectionItem[];
+    if (menuLoading || dbItems.length === 0) return section;
+    const staticNames = new Set(staticItems.map((i) => i.name.toLowerCase().trim()));
+    const merged: SectionItem[] = staticItems
+      .filter((i) => getItem(i.name))
+      .map((i) => {
+        const db = getItem(i.name)!;
+        return { ...i, name: db.name, price: fmtPrice(db.price), description: db.description || undefined };
+      });
+    const extras = dbItems
+      .filter((d) => d.category === section.title && !staticNames.has(d.name.toLowerCase().trim()))
+      .map((d) => ({ name: d.name, price: fmtPrice(d.price), description: d.description || undefined }));
+    return { ...section, items: [...merged, ...extras] };
+  });
+
+
+
 
   const handleAddToCart = (item: { name: string; price: string }, category: string) => {
     const id = generateId(item.name, category);
@@ -290,7 +312,7 @@ const Menu = () => {
 
         {/* Menu Sections */}
         <div className="space-y-12 max-w-5xl mx-auto">
-          {menuSections.map((section, index) => (
+          {liveSections.map((section, index) => (
             <motion.div
               key={index} 
               initial={{ opacity: 0, y: 50 }}
