@@ -56,9 +56,9 @@ const Menu = () => {
       description: "Fried chicken meals. Lunch sizes are available at set times only.",
       orderable: true,
       items: [
-        { name: "Small Lunch (Chicken)", price: "$9.99", description: "2 pieces of fried chicken. Available 11am–2pm." },
-        { name: "Medium Lunch (Chicken)", price: "$14.99", description: "3 pieces of fried chicken. Available 2pm–5pm." },
-        { name: "Chicken Dinner", price: "$19.99", description: "4 pieces of chicken with any drink.", badge: "Popular" },
+        { name: "Chicken Special", price: "$9.99", description: "2 pieces of fried chicken. Available 11am–2:30pm.", badge: "Special" },
+        { name: "Chicken Lunch", price: "$14.99", description: "3 pieces of fried chicken. Available 2:30pm–5pm." },
+        { name: "Chicken Dinner", price: "$19.99", description: "Main dinner (5pm–8pm), our bigger portion: 4 pieces of chicken with any drink. Can be ordered anytime.", badge: "Popular" },
       ],
     },
     {
