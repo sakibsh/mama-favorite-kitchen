@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { usePickupSettings } from "@/hooks/usePickupSettings";
 import { useOperatingHours } from "@/hooks/useOperatingHours";
 import { useMenuAvailability } from "@/hooks/useMenuAvailability";
+import { isMealTimeAvailable, MEAL_WINDOWS } from "@/lib/mealWindows";
 
 // Helper to generate unique ID from item name
 const generateId = (name: string, category: string) => {
@@ -34,20 +35,49 @@ const Menu = () => {
   const menuSections = [
     {
       title: "Signature Stew Bowls",
-      description: "Served with your choice of Jollof Rice, White Rice, Quinoa, Mixed Greens, or Fresh Baked Roti. All meats available Halal — just ask.",
-      subtitle: "Every dinner bowl includes your choice of drink from the fridge + a 4oz quinoa salad.",
+      description: "Served with your choice of Jollof Rice, White Rice, Mixed Greens, or Fresh Baked Roti. All meats available Halal — just ask.",
+      subtitle: "Every dinner bowl includes your choice of drink from the fridge.",
       orderable: true,
       items: [
-        { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", description: "Includes choice of drink & 4oz quinoa salad.", badge: "Vegetarian" },
-        { name: "Curry Chicken", price: "$21.99", description: "Classic curry chicken simmered in fragrant spices. Includes choice of drink & 4oz quinoa salad.", badge: "New" },
-        { name: "Chicken Stew Bowl", price: "$22.99", description: "Includes choice of drink & 4oz quinoa salad.", badge: "Popular" },
-        { name: "Boneless Chicken Curry Stew Bowl", price: "$22.99", description: "Rich, aromatic curry with tender boneless chicken. Includes choice of drink & 4oz quinoa salad.", badge: "New" },
-        { name: "Beef Stew Bowl", price: "$23.99", description: "Includes choice of drink & 4oz quinoa salad." },
-        { name: "Goat Stew Bowl", price: "$26.99", description: "Includes choice of drink & 4oz quinoa salad." },
-        { name: "Boneless Goat Curry Stew Bowl", price: "$26.99", description: "Slow-simmered curry with tender boneless goat. Includes choice of drink & 4oz quinoa salad.", badge: "New" },
-        { name: "Lamb Stew Bowl", price: "$27.99", description: "Includes choice of drink & 4oz quinoa salad." },
-        { name: "Shrimp Stew Bowl", price: "$26.99", description: "Includes choice of drink & 4oz quinoa salad." },
-        { name: "Salmon Stew Bowl", price: "$28.99", description: "Includes choice of drink & 4oz quinoa salad." },
+        { name: "Garden Vegetable Stew Bowl (Vegan)", price: "$21.99", badge: "Vegetarian" },
+        { name: "Curry Chicken", price: "$21.99", description: "Classic curry chicken simmered in fragrant spices.", badge: "New" },
+        { name: "Chicken Stew Bowl", price: "$22.99", badge: "Popular" },
+        { name: "Boneless Chicken Curry Stew Bowl", price: "$22.99", description: "Rich, aromatic curry with tender boneless chicken.", badge: "New" },
+        { name: "Beef Stew Bowl", price: "$23.99" },
+        { name: "Goat Stew Bowl", price: "$26.99" },
+        { name: "Boneless Goat Curry Stew Bowl", price: "$26.99", description: "Slow-simmered curry with tender boneless goat.", badge: "New" },
+        { name: "Lamb Stew Bowl", price: "$27.99" },
+        { name: "Shrimp Stew Bowl", price: "$26.99" },
+        { name: "Salmon Stew Bowl", price: "$28.99" },
+      ],
+    },
+    {
+      title: "Chicken Meals",
+      description: "Fried chicken meals. Lunch sizes are available at set times only.",
+      orderable: true,
+      items: [
+        { name: "Small Lunch (Chicken)", price: "$9.99", description: "2 pieces of fried chicken. Available 11am–2pm." },
+        { name: "Medium Lunch (Chicken)", price: "$14.99", description: "3 pieces of fried chicken. Available 2pm–5pm." },
+        { name: "Chicken Dinner", price: "$19.99", description: "4 pieces of chicken with any drink.", badge: "Popular" },
+      ],
+    },
+    {
+      title: "Curry & Stew Meals",
+      description: "Medium $19.99. Dinner $23.99 with any drink. All meats available Halal, just ask.",
+      orderable: true,
+      items: [
+        ...["Curry Goat", "Curry Chicken", "Stew Goat", "Stew Lamb", "Stew Fish"].flatMap((n) => [
+          { name: `${n} (Medium)`, price: "$19.99" },
+          { name: `${n} (Dinner)`, price: "$23.99", description: "Comes with any drink." },
+        ]),
+      ],
+    },
+    {
+      title: "Mama's Pot",
+      orderable: true,
+      items: [
+        { name: "Mama's Pot Soup", price: "$19.99" },
+        { name: "Mama's Pot Add Protein", price: "$6.99" },
       ],
     },
     {
@@ -99,7 +129,6 @@ const Menu = () => {
       title: "Fresh & Healthy",
       orderable: true,
       items: [
-        { name: "Quinoa Power Bowl", price: "$16.99" },
         { name: "Mixed Green Salad", price: "$10.99", badge: "Vegetarian" },
         { name: "Fruit Cup", price: "$6.99" },
       ],
@@ -286,7 +315,8 @@ const Menu = () => {
                   {section.items.map((item, itemIndex) => {
                     const itemId = generateId(item.name, section.title);
                     const quantity = getItemQuantity(itemId);
-                    const available = isItemAvailable(item.name);
+                    const timeOk = isMealTimeAvailable(item.name);
+                    const available = isItemAvailable(item.name) && timeOk;
                     
                     return (
                     <div
@@ -302,7 +332,7 @@ const Menu = () => {
                             <h3 className={`font-bold text-lg ${available ? "text-foreground" : "text-muted-foreground line-through"}`}>{item.name}</h3>
                           {!available && (
                             <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
-                              Unavailable
+                              {timeOk ? "Unavailable" : MEAL_WINDOWS[item.name].label}
                             </Badge>
                           )}
                           {available && item.badge && (
@@ -342,7 +372,7 @@ const Menu = () => {
                               className="bg-muted text-muted-foreground cursor-not-allowed"
                             >
                               <Ban className="h-4 w-4 mr-1" />
-                              Sold Out
+                              {timeOk ? "Sold Out" : "Not now"}
                             </Button>
                           ) : section.orderable ? (
                             // Check if ordering is unavailable
