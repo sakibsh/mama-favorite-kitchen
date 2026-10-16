@@ -750,33 +750,44 @@ export default function Admin() {
           <TabsContent value="menu" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Menu Availability</CardTitle>
+                <CardTitle>Menu</CardTitle>
                 <CardDescription>
-                  Toggle items on/off to update what's available for ordering
+                  Edit names, prices and descriptions, add or delete items, and toggle availability. Changes appear on the website instantly. Leave price empty for "call to order".
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {Object.entries(groupedMenuItems).map(([category, items]) => (
                   <div key={category}>
-                    <h3 className="font-semibold text-lg mb-3 text-brand-orange">{category}</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-lg text-brand-orange">{category}</h3>
+                      <Button size="sm" variant="outline" onClick={() => openEditor({ category })}>
+                        <Plus className="h-4 w-4 mr-1" /> Add item
+                      </Button>
+                    </div>
                     <div className="grid gap-2">
                       {items.map((item) => (
                         <div
                           key={item.id}
-                          className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                            item.is_available ? "bg-white dark:bg-black" : "bg-muted opacity-60"
+                          className={`flex items-center justify-between gap-3 p-3 rounded-lg border transition-colors ${
+                            item.is_available ? "bg-card" : "bg-muted opacity-60"
                           }`}
                         >
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <p className={`font-medium ${!item.is_available && "line-through"}`}>
                               {item.name}
                             </p>
-                            {item.price > 0 && (
-                              <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
-                            )}
+                            <p className="text-sm text-muted-foreground">
+                              {item.price > 0 ? `$${Number(item.price).toFixed(2)}` : "Call to order"}
+                            </p>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Button size="icon" variant="ghost" aria-label={`Edit ${item.name}`} onClick={() => openEditor(item)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button size="icon" variant="ghost" aria-label={`Delete ${item.name}`} onClick={() => deleteMenuItem(item)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                            <span className="text-sm text-muted-foreground hidden sm:inline">
                               {item.is_available ? "Available" : "Unavailable"}
                             </span>
                             <Switch
@@ -791,6 +802,48 @@ export default function Admin() {
                 ))}
               </CardContent>
             </Card>
+
+            <Dialog open={!!editItem} onOpenChange={(o) => !o && setEditItem(null)}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{editItem?.id ? "Edit item" : "Add item"}</DialogTitle>
+                </DialogHeader>
+                {editItem && (
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <Label htmlFor="item-name">Name</Label>
+                      <Input id="item-name" value={editItem.name} maxLength={120}
+                        onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="item-price">Price ($)</Label>
+                      <Input id="item-price" type="number" step="0.01" min="0" placeholder="Empty = call to order"
+                        value={editItem.price} onChange={(e) => setEditItem({ ...editItem, price: e.target.value })} />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="item-desc">Description</Label>
+                      <Textarea id="item-desc" value={editItem.description} maxLength={500}
+                        onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} />
+                    </div>
+                    <div className="space-y-1">
+                      <Label>Section</Label>
+                      <Select value={editItem.category} onValueChange={(v) => setEditItem({ ...editItem, category: v })}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {Object.keys(groupedMenuItems).map((c) => (
+                            <SelectItem key={c} value={c}>{c}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setEditItem(null)}>Cancel</Button>
+                  <Button onClick={saveMenuItem} disabled={isSavingItem}>{isSavingItem ? "Saving..." : "Save"}</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </TabsContent>
         </Tabs>
       </div>
