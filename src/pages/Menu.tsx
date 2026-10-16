@@ -361,9 +361,11 @@ const Menu = () => {
                       </div>
                         
                         <div className="flex items-center gap-4">
-                          <span className={`font-bold text-xl whitespace-nowrap ${available ? "text-brand-orange" : "text-muted-foreground"}`}>
-                        {item.price}
-                      </span>
+                          {item.price ? (
+                            <span className={`font-bold text-xl whitespace-nowrap ${available ? "text-brand-orange" : "text-muted-foreground"}`}>
+                              {item.price}
+                            </span>
+                          ) : null}
                           
                           {!available ? (
                             <Button
